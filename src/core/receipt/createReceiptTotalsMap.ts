@@ -10,7 +10,7 @@ import { formatDate } from "../util/dateformat";
  */
 export function createReceiptTotalsMap(
   receiptData: any[][]
-): Map<string, number> {
+): Map<string, boolean> {
   Logger.log("createReceiptTotalsMap");
 
   const map = new Map();
