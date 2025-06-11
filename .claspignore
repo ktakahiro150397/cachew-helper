@@ -1,0 +1,9 @@
+**/.git/**
+**/node_modules/**
+**/*.ts
+**/src/**
+**/package*.json
+**/tsconfig.json
+**/esbuild.js
+**/.gitignore
+**/.claspignore
