@@ -1,16 +1,17 @@
 import { formatDate } from "../util/dateformat";
+import { SpreadsheetData } from "../../types/spreadsheet-types";
 
 /**
  * 銀行明細を処理し、統合データシートにコピーします。
  * 明細の内容から取引種別（支出, 収入, 振替）を判定します。 
- * @param {Array<Array<any>>} bankData - ①入力_銀行シートの全データ。
+ * @param {SpreadsheetData} bankData - ①入力_銀行シートの全データ。
  * @param {GoogleAppsScript.Spreadsheet.Sheet} integratedSheet - ④作業_統合データシート。
  */
-export function processBankData(bankData: Array<Array<any>>, integratedSheet: GoogleAppsScript.Spreadsheet.Sheet) {
+export function processBankData(bankData: SpreadsheetData, integratedSheet: GoogleAppsScript.Spreadsheet.Sheet) {
   // ヘッダー行をスキップ
   if (bankData.length <= 1) return;
 
-  const dataToAppend: Array<Array<any>> = [];
+  const dataToAppend: SpreadsheetData = [];
   for (let i = 1; i < bankData.length; i++) {
     const row = bankData[i];
     // 実際には日付, 金額, 摘要（description）の列インデックスを特定する必要があります。

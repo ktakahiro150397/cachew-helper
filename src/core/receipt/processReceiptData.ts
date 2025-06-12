@@ -1,16 +1,17 @@
 import { formatDate } from "../util/dateformat";
+import { SpreadsheetData } from "../../types/spreadsheet-types";
 
 /**
  * レシートデータを処理し、統合データシートにコピーします。
  * 各行は取引種別「支出」として扱います。 
- * @param {Array<Array<any>>} receiptData - ③入力_レシートシートの全データ。
+ * @param {SpreadsheetData} receiptData - ③入力_レシートシートの全データ。
  * @param {GoogleAppsScript.Spreadsheet.Sheet} integratedSheet - ④作業_統合データシート。
  */
-export function processReceiptData(receiptData: Array<Array<any>>, integratedSheet: GoogleAppsScript.Spreadsheet.Sheet) {
+export function processReceiptData(receiptData: SpreadsheetData, integratedSheet: GoogleAppsScript.Spreadsheet.Sheet) {
   // ヘッダー行をスキップ
   if (receiptData.length <= 1) return;
 
-  const dataToAppend: Array<Array<any>> = [];
+  const dataToAppend: SpreadsheetData = [];
   for (let i = 1; i < receiptData.length; i++) {
     const row = receiptData[i];
     // 実際には日付, 金額, 店名（摘要）, カテゴリ, 支払方法 の列インデックスを特定する必要があります。

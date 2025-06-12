@@ -1,10 +1,12 @@
 
+import { SpreadsheetData } from "../../types/spreadsheet-types";
+
 /**
  * 統合データをCashewのインポート仕様に合わせて整形し、出力シートに書き出します。
- * @param {Array<Array<any>>} sourceData - ④作業_統合データシートの全データ。
+ * @param {SpreadsheetData} sourceData - ④作業_統合データシートの全データ。
  * @param {GoogleAppsScript.Spreadsheet.Sheet} targetSheet - ⑤出力_Cashew用シート。
  */
-export function formatForCashew(sourceData: Array<Array<any>>, targetSheet: GoogleAppsScript.Spreadsheet.Sheet) {
+export function formatForCashew(sourceData: SpreadsheetData, targetSheet: GoogleAppsScript.Spreadsheet.Sheet) {
   Logger.log("sourceData length: " + sourceData.length);
   
   if (sourceData.length === 0) return;

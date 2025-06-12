@@ -1,15 +1,16 @@
 import { formatDate } from "../util/dateformat";
+import { SpreadsheetData } from "../../types/spreadsheet-types";
 
 /**
  * レシートデータから、カード払いレシートの合計金額マップを作成します。
  * マップのキーは '日付_支払方法_金額' の形式で、レシートが存在することを示す値を持つ。
  * レシートOCRデータは「支払方法」列が必須。
  *
- * @param {Array<Array<any>>} receiptData - ③入力_レシートシートの全データ。
+ * @param {SpreadsheetData} receiptData - ③入力_レシートシートの全データ。
  * @returns {Map<string, boolean>} - カード払いレシートの合計金額マップ。
  */
 export function createReceiptTotalsMap(
-  receiptData: any[][]
+  receiptData: SpreadsheetData
 ): Map<string, boolean> {
   Logger.log("createReceiptTotalsMap");
 

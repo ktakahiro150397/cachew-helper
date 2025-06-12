@@ -1,17 +1,18 @@
 import { formatDate } from "../util/dateformat";
 import { determineCardTypeFromDescription } from "./determineCardTypeFromDescription";
+import { SpreadsheetData } from "../../types/spreadsheet-types";
 
 /**
  * カード明細を処理し、レシートと重複しないものを統合データシートにコピーします。
- * @param {Array<Array<any>>} cardData - ②入力_カードシートの全データ。
+ * @param {SpreadsheetData} cardData - ②入力_カードシートの全データ。
  * @param {Map<string, boolean>} receiptTotalsMap - createReceiptTotalsMapで作成されたマップ。
  * @param {GoogleAppsScript.Spreadsheet.Sheet} integratedSheet - ④作業_統合データシート。
  */
-export function processCardData(cardData:Array<Array<any>>, receiptTotalsMap: Map<string, boolean>, integratedSheet: GoogleAppsScript.Spreadsheet.Sheet) {
+export function processCardData(cardData: SpreadsheetData, receiptTotalsMap: Map<string, boolean>, integratedSheet: GoogleAppsScript.Spreadsheet.Sheet) {
   // ヘッダー行をスキップ
   if (cardData.length <= 1) return;
 
-  const dataToAppend = [];
+  const dataToAppend: SpreadsheetData = [];
   for (let i = 1; i < cardData.length; i++) {
     const row = cardData[i];
     // 実際には日付, 金額, 摘要（description）の列インデックスを特定する必要があります。
