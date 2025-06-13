@@ -19,14 +19,14 @@ export function createReceiptTotalsMap(
   if (receiptData.length <= 1) return map;
 
   for (let i = 1; i < receiptData.length; i++) {
-    Logger.log(`Processing row ${i}: ${receiptData[i].join(", ")}`);
-
     const row = receiptData[i];
     // 実際には日付、金額、支払方法の列インデックスを特定する必要があります。
-    // 仮に0:日付, 1:金額, 2:支払方法 とします。適宜調整してください。
-    const date = formatDate(row[0]); // 日付のフォーマットを統一
-    const amount = parseFloat(row[1]);
-    const paymentMethod = String(row[2]).trim(); // 支払方法列
+    // 仮に0:日付, 1:金額, 2:店名, 3:カテゴリ, 4:支払方法 とします。適宜調整してください。
+    const date = formatDate(row[0]);
+    const amount = parseFloat(row[1]); // レシートは支出なので、Cashew向けに負の数に変換
+    const shopName = String(row[2]).trim();
+    let category = String(row[3]).trim();
+    const paymentMethod = String(row[4]).trim(); // 支払方法列が必須
 
     // カード払いと判断される支払方法を定義（例: 個人カード, 家族カード）
     if (paymentMethod.includes("カード") && !isNaN(amount)) {
@@ -42,6 +42,6 @@ export function createReceiptTotalsMap(
   map.forEach((value, key) => {
     Logger.log(`Key: ${key}, Value: ${value}`);
   });
-  
+
   return map;
 }
