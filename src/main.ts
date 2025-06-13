@@ -10,16 +10,19 @@ import { determineCardTypeFromDescription } from "./core/card/determineCardTypeF
 import { processBankData } from "./core/bank/processBankData";
 import { processReceiptData } from "./core/receipt/processReceiptData";
 import { formatForCashew } from "./core/cashew/formatForCashew";
+import { writeIntegratedSheetHeader } from "./core/util/integrated-sheet";
 
 // GAS上のエントリポイント
 (global as any).processTransaction = processTransaction;
 (global as any).createReceiptTotalsMap = createReceiptTotalsMap;
 (global as any).formatDate = formatDate;
 (global as any).processCardData = processCardData;
-(global as any).determineCardTypeFromDescription = determineCardTypeFromDescription;
+(global as any).determineCardTypeFromDescription =
+  determineCardTypeFromDescription;
 (global as any).processBankData = processBankData;
 (global as any).processReceiptData = processReceiptData;
 (global as any).formatForCashew = formatForCashew;
+(global as any).writeIntegratedSheetHeader = writeIntegratedSheetHeader;
 
 // const record: CashewExportRow = {
 //     Date: new Date(),
