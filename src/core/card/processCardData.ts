@@ -63,7 +63,7 @@ export function processCardData(
     // データ行を処理
     const date = formatDate(row[0]); // 日付のフォーマットを統一
     const description = String(row[1]).trim(); // 2セル目は内容
-    const amount = parseFloat(row[5]);
+    const amount = parseFloat(row[5]) * -1;
     const note = String(row[6]).trim(); // 6セル目はメモ
 
     const assumedPaymentMethod = determineCardTypeFromCardNo(cardNumber);
@@ -87,7 +87,7 @@ export function processCardData(
         date: new Date(date),
         account: "", // 勘定科目はCashewの仕様による
         category: "", // カテゴリは後で手動設定またはGASで自動判定
-        amount: -Math.abs(amount), // 金額は通常マイナス値
+        amount: amount,
         description: description, // 摘要
         paymentMethod: assumedPaymentMethod, // 支払い方法
         transferFrom: "", // 振替元口座は空

@@ -11,7 +11,6 @@ import { writeIntegratedSheetHeader } from "../core/util/integrated-sheet";
  * 最終的に家計簿アプリ（Cashew）に取り込むための完成されたデータを作成します。
  */
 export function processTransaction() {
-  Logger.log("20250611 13:20");
   Logger.log("processTransaction called at " + new Date().toISOString());
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();

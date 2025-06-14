@@ -32,37 +32,31 @@ export function processBankData(
     let paymentMethod = ""; // 銀行明細の場合、支払い方法の概念は薄い
 
     // 金額で収入/支出を判定
-    if (amount_out > 0) {
-      transactionType = "収入";
-    } else {
+    if (!isNaN(amount_out)) {
       transactionType = "支出";
+    } else {
+      transactionType = "収入";
     }
 
     // 銀行明細の内容から「振替」を判定するロジック（例: ATM引き出し、口座間移動、カード引き落とし）
     // 例① カード代金の支払い：銀行口座からカード会社への「借金の返済」であり、支出ではない。
     // 例② ATMでの現金引き出し：「銀行口座」から「現金（財布）」へのお金の移動。
     // 例③ 口座間の資金移動：「自分口座」から「家族口座」へのお金の移動。
-    if (description.includes("ATM")) {
+    if (description.includes("ENET")) {
       transactionType = "振替"; // ATM引き出しは振替
-      sourceAccount = "銀行口座名"; // 例: SMBC, SBIネット銀行
+      sourceAccount = "SMBC"; // 例: SMBC, SBIネット銀行
       destinationAccount = "現金"; // 「現金（お財布）」も一つの独立した口座として扱う
-    } else if (
-      description.includes("カード") &&
-      (description.includes("引落") || description.includes("支払"))
-    ) {
+    } else if (description.includes("ﾐﾂｲｽﾐﾄﾓｶ-ﾄﾞ (ｶ")) {
       transactionType = "振替"; // カード代金の支払いは振替
-      sourceAccount = "銀行口座名";
-      destinationAccount = "カード会社名"; // 例: 個人カード, 家族カード
-    } else if (
-      description.includes("口座振替") ||
-      description.includes("口座間移動")
-    ) {
+      sourceAccount = "SMBC";
+      destinationAccount = "Vpass"; // 例: 個人カード, 家族カード
+    } else if (description.includes("SMBC(ｽﾐｼﾝSBIﾈﾂ")) {
       transactionType = "振替"; // 口座間移動
-      sourceAccount = "移動元口座名";
-      destinationAccount = "移動先口座名";
+      sourceAccount = "SMBC";
+      destinationAccount = "SBI";
     }
 
-    const amount = isNaN(amount_out) ? amount_in * -1 : amount_out;
+    const amount = isNaN(amount_out) ? amount_in : amount_out * -1;
 
     const integratedData = IntegratedSheetDataRow.create({
       date: new Date(date),
