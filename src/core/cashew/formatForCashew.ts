@@ -30,7 +30,7 @@ export function formatForCashew(
     const row = sourceData[i];
     const date = row[0];
     const amount = row[3];
-    const category = row[2];
+    const category = row[2] || "test_category";
     const description = row[4];
 
     const account = row[6];
