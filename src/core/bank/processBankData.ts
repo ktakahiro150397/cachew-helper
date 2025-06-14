@@ -1,6 +1,6 @@
 import { formatDate } from "../util/dateformat";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
-import { IntegratedSheetDataRow } from "../../interface/integrated-sheet";
+import { IntegratedSheetDataRow } from "../../interface/IntegratedSheetDataRow";
 
 /**
  * 銀行明細を処理し、統合データシートにコピーします。

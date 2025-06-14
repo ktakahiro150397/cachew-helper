@@ -1,7 +1,8 @@
 import { formatDate } from "../util/dateformat";
 import { determineCardTypeFromCardNo } from "./determineCardTypeFromDescription";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
-import { IntegratedSheetDataRow } from "../../interface/integrated-sheet";
+import { IntegratedSheetDataRow } from "../../interface/IntegratedSheetDataRow";
+import { IntegratedSheetDataSource } from "../../enum/IntegratedSheetDataSource";
 
 /*
 シート入力データ
@@ -93,6 +94,7 @@ export function processCardData(
         transferTo: "", // 振替先口座は空
         transactionType: "支出", // 取引種別は「支出」
         note: note, // メモ
+        dataSource: assumedPaymentMethod,
       });
 
       Logger.log(`統合データ行を追加: ${integratedData}`);

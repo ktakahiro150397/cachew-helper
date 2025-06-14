@@ -1,3 +1,7 @@
+import {
+  getAccountName,
+  IntegratedSheetDataSource,
+} from "../enum/IntegratedSheetDataSource";
 import { SpreadsheetRowData } from "../types/spreadsheet-types";
 
 export class IntegratedSheetDataRow {
@@ -23,7 +27,8 @@ export class IntegratedSheetDataRow {
     public transferFrom: string,
     public transferTo: string,
     public transactionType: string,
-    public note: string
+    public note: string,
+    public dataSource: IntegratedSheetDataSource
   ) {}
 
   static create(data: {
@@ -37,6 +42,7 @@ export class IntegratedSheetDataRow {
     transferTo: string;
     transactionType: string;
     note: string;
+    dataSource: IntegratedSheetDataSource;
   }): IntegratedSheetDataRow {
     return new IntegratedSheetDataRow(
       data.date,
@@ -48,7 +54,8 @@ export class IntegratedSheetDataRow {
       data.transferFrom,
       data.transferTo,
       data.transactionType,
-      data.note
+      data.note,
+      data.dataSource
     );
   }
 
@@ -64,6 +71,7 @@ export class IntegratedSheetDataRow {
       this.transferTo,
       this.transactionType,
       this.note,
+      getAccountName(this.dataSource),
     ];
   }
 
@@ -76,6 +84,6 @@ export class IntegratedSheetDataRow {
       this.transferFrom
     }, transferTo=${this.transferTo}, transactionType=${
       this.transactionType
-    }, note=${this.note})`;
+    }, note=${this.note}, dataSource=${this.dataSource})`;
   }
 }
