@@ -70,6 +70,7 @@ export function processBankData(
       transferFrom: sourceAccount, // 振替元口座
       transferTo: destinationAccount, // 振替先口座
       transactionType: transactionType, // 取引種別
+      note: "", // メモは空
     });
 
     Logger.log(`統合データ行を追加: ${integratedData}`);

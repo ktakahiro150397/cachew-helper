@@ -12,6 +12,7 @@ export function writeIntegratedSheetHeader(
     "振替元口座",
     "振替先口座",
     "取引種別",
+    "メモ",
   ];
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   Logger.log(`シート "${sheet.getName()}" のヘッダーを設定しました。`);

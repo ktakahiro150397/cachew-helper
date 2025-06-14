@@ -44,6 +44,7 @@ export function processReceiptData(
       transferFrom: "", // 振替元口座は空
       transferTo: "", // 振替先口座は空
       transactionType: "支出", // 取引種別は「支出」
+      note: "", // メモは空
     });
 
     Logger.log(`統合データ行を追加: ${integratedData}`);

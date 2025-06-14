@@ -22,7 +22,8 @@ export class IntegratedSheetDataRow {
     public paymentMethod: string,
     public transferFrom: string,
     public transferTo: string,
-    public transactionType: string
+    public transactionType: string,
+    public note: string
   ) {}
 
   static create(data: {
@@ -35,6 +36,7 @@ export class IntegratedSheetDataRow {
     transferFrom: string;
     transferTo: string;
     transactionType: string;
+    note: string;
   }): IntegratedSheetDataRow {
     return new IntegratedSheetDataRow(
       data.date,
@@ -45,7 +47,8 @@ export class IntegratedSheetDataRow {
       data.paymentMethod,
       data.transferFrom,
       data.transferTo,
-      data.transactionType
+      data.transactionType,
+      data.note
     );
   }
 
@@ -60,6 +63,7 @@ export class IntegratedSheetDataRow {
       this.transferFrom,
       this.transferTo,
       this.transactionType,
+      this.note,
     ];
   }
 
@@ -70,6 +74,8 @@ export class IntegratedSheetDataRow {
       this.description
     }, paymentMethod=${this.paymentMethod}, transferFrom=${
       this.transferFrom
-    }, transferTo=${this.transferTo}, transactionType=${this.transactionType})`;
+    }, transferTo=${this.transferTo}, transactionType=${
+      this.transactionType
+    }, note=${this.note})`;
   }
 }
