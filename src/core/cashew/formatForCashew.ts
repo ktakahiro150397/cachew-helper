@@ -1,3 +1,4 @@
+import { CashewExportRow } from "../../interface/cashew-export";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 
 /**
@@ -12,9 +13,7 @@ export function formatForCashew(
   Logger.log("sourceData length: " + sourceData.length);
 
   if (sourceData.length === 0) return;
-
-  const header = ["Date", "Amount", "Category", "Title", "Note", "Account"]; // CashewのインポートCSVヘッダー例
-  const outputRows = [header];
+  const outputRows = [];
 
   // 統合シートの各行をCashewの形式に変換
   // 入力フォーマット：[日付, 勘定科目, カテゴリ, 金額, 摘要, 支払い方法, 振替元口座, 振替先口座, 取引種別]
@@ -33,21 +32,25 @@ export function formatForCashew(
     const category = row[2] || "test_category";
     const description = row[4];
 
-    const account = row[6];
+    const note = row[9] || "";
+    const account = row[10];
 
     // const paymentMethod = row[5];
     // const sourceAccount = row[6]; // 振替元口座
     // const destinationAccount = row[7]; // 振替先口座
     // const transactionType = row[8]; // 取引種別 (支出, 収入, 振替)
 
-    outputRows.push([
-      date,
-      amount,
-      category,
-      description, // 摘要はタイトルとして扱う
-      "", // メモは空（必要に応じて追加）
-      account, // 口座は振替元口座名を入れる
-    ]);
+    const exportRow = CashewExportRow.create({
+      Date: date,
+      Amount: amount,
+      Category: category, // カテゴリは適宜設定
+      Title: description, // 摘要はタイトルとして扱う
+      Note: note, // メモは空（必要に応じて追加）
+      Account: account, // 口座は振替元口座名を入れる
+    });
+
+    console.log(exportRow.toString());
+    outputRows.push(exportRow.getWriteData());
   }
 
   if (outputRows.length > 1) {

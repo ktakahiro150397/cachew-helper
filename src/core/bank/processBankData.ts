@@ -1,6 +1,7 @@
 import { formatDate } from "../util/dateformat";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { IntegratedSheetDataRow } from "../../interface/IntegratedSheetDataRow";
+import { IntegratedSheetDataSource } from "../../enum/IntegratedSheetDataSource";
 
 /**
  * 銀行明細を処理し、統合データシートにコピーします。
@@ -21,8 +22,9 @@ export function processBankData(
     // 実際には日付, 金額, 摘要（description）の列インデックスを特定する必要があります。
     // 仮に0:日付, 1:金額, 2:摘要 とします。適宜調整してください。
     const date = formatDate(row[0]);
-    const amount = parseFloat(row[1]);
-    const description = String(row[2]).trim();
+    const amount_out = parseFloat(row[1]);
+    const amount_in = parseFloat(row[2]);
+    const description = String(row[3]).trim();
 
     let transactionType = "支出"; // デフォルトは支出
     let sourceAccount = "";
@@ -30,7 +32,7 @@ export function processBankData(
     let paymentMethod = ""; // 銀行明細の場合、支払い方法の概念は薄い
 
     // 金額で収入/支出を判定
-    if (amount > 0) {
+    if (amount_out > 0) {
       transactionType = "収入";
     } else {
       transactionType = "支出";
@@ -60,17 +62,20 @@ export function processBankData(
       destinationAccount = "移動先口座名";
     }
 
+    const amount = isNaN(amount_out) ? amount_in * -1 : amount_out;
+
     const integratedData = IntegratedSheetDataRow.create({
       date: new Date(date),
       account: "", // 勘定科目はCashewの仕様による
       category: "", // カテゴリは後で手動設定またはGASで自動判定
-      amount: Math.abs(amount), // 金額は絶対値で記録
+      amount: amount, // 金額は絶対値で記録
       description: description, // 摘要
       paymentMethod: paymentMethod, // 支払い方法（銀行明細では薄い）
       transferFrom: sourceAccount, // 振替元口座
       transferTo: destinationAccount, // 振替先口座
       transactionType: transactionType, // 取引種別
       note: "", // メモは空
+      dataSource: IntegratedSheetDataSource.SMBC,
     });
 
     Logger.log(`統合データ行を追加: ${integratedData}`);
