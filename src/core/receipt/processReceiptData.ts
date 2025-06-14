@@ -1,5 +1,6 @@
 import { formatDate } from "../util/dateformat";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
+import { IntegratedSheetDataRow } from "../../interface/integrated-sheet";
 
 /**
  * レシートデータを処理し、統合データシートにコピーします。
@@ -33,17 +34,20 @@ export function processReceiptData(
       // Cashewへの出力時に、振替ではなく「資産」として処理されるように調整
     }
 
-    dataToAppend.push([
-      date, // 日付
-      "", // 勘定科目 (Cashewの仕様による)
-      category, // カテゴリ (レシートOCRアプリから取得したカテゴリ)
-      amount, // 金額 (支出なので負の数)
-      shopName, // 摘要 (店名)
-      paymentMethod, // 支払い方法
-      "", // 振替元口座
-      "", // 振替先口座
-      "支出", // 取引種別
-    ]);
+    const integratedData = IntegratedSheetDataRow.create({
+      date: new Date(date),
+      account: "", // 勘定科目はCashewの仕様による
+      category: category, // カテゴリはレシートOCRアプリから取得したもの
+      amount: -Math.abs(amount), // 金額は支出なので負の数
+      description: shopName, // 摘要（店名）
+      paymentMethod: paymentMethod, // 支払い方法
+      transferFrom: "", // 振替元口座は空
+      transferTo: "", // 振替先口座は空
+      transactionType: "支出", // 取引種別は「支出」
+    });
+
+    Logger.log(`統合データ行を追加: ${integratedData}`);
+    dataToAppend.push(integratedData.getWriteData());
   }
   if (dataToAppend.length > 0) {
     integratedSheet

@@ -42,10 +42,11 @@ export function processTransaction() {
     // ④作業_統合データ と ⑤出力_Cashew用 の2つのシートの内容をクリアする。
     clearSheet(integratedSheet);
     clearSheet(outputSheet);
-    Logger.log("初期化処理が完了しました。");
 
     // ④作業_統合データシートのヘッダーを設定する
     writeIntegratedSheetHeader(integratedSheet);
+
+    Logger.log("初期化処理が完了しました。");
 
     // 2. レシートデータの前処理（合計金額マップを作成）
     // ③入力_レシート のデータを読み込み、カード払いのレシートを対象に

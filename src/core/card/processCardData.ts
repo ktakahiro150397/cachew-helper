@@ -1,6 +1,7 @@
 import { formatDate } from "../util/dateformat";
 import { determineCardTypeFromDescription } from "./determineCardTypeFromDescription";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
+import { IntegratedSheetDataRow } from "../../interface/integrated-sheet";
 
 /**
  * カード明細を処理し、レシートと重複しないものを統合データシートにコピーします。
@@ -44,17 +45,21 @@ export function processCardData(
       // カード明細なので、取引種別は「支出」
       // 支払い方法は assumedPaymentMethod
       // 振替元・先口座は空
-      dataToAppend.push([
-        date, // 日付
-        "", // 勘定科目 (Cashewの仕様による)
-        "", // カテゴリ (後で手動設定またはGASで自動判定)
-        amount, // 金額 (通常マイナス値)
-        description, // 摘要
-        assumedPaymentMethod, // 支払い方法
-        "", // 振替元口座
-        "", // 振替先口座
-        "支出", // 取引種別
-      ]);
+
+      const integratedData = IntegratedSheetDataRow.create({
+        date: new Date(date),
+        account: "", // 勘定科目はCashewの仕様による
+        category: "", // カテゴリは後で手動設定またはGASで自動判定
+        amount: -Math.abs(amount), // 金額は通常マイナス値
+        description: description, // 摘要
+        paymentMethod: assumedPaymentMethod, // 支払い方法
+        transferFrom: "", // 振替元口座は空
+        transferTo: "", // 振替先口座は空
+        transactionType: "支出", // 取引種別は「支出」
+      });
+
+      Logger.log(`統合データ行を追加: ${integratedData}`);
+      dataToAppend.push(integratedData.getWriteData());
     }
   }
   if (dataToAppend.length > 0) {
