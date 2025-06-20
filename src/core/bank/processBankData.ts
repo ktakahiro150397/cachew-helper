@@ -5,6 +5,7 @@ import { IntegratedSheetDataSource } from "../../enum/IntegratedSheetDataSource"
 import { CashewAccount } from "../../enum/cashew-account";
 import { TransactionType } from "../../enum/TransactionType";
 import { TransferSource } from "../../enum/TransferSource";
+import { getClensingDescription } from "./ClensingDescription";
 
 /**
  * 銀行明細を処理し、統合データシートにコピーします。
@@ -27,7 +28,7 @@ export function processBankData(
     const date = formatDate(row[0]);
     const amount_out = parseFloat(row[1]);
     const amount_in = parseFloat(row[2]);
-    const description = String(row[3]).trim();
+    const description = getClensingDescription(String(row[3]));
 
     let transactionType = TransactionType.EXPENSE; // デフォルトは支出
     let sourceAccount: TransferSource = TransferSource.NONE;
@@ -45,7 +46,7 @@ export function processBankData(
     // 例① カード代金の支払い：銀行口座からカード会社への「借金の返済」であり、支出ではない。
     // 例② ATMでの現金引き出し：「銀行口座」から「現金（財布）」へのお金の移動。
     // 例③ 口座間の資金移動：「自分口座」から「家族口座」へのお金の移動。
-    if (description.includes("ENET")) {
+    if (description.includes("ENET") || description.includes("カード　")) {
       transactionType = TransactionType.TRANSFER; // ATM引き出しは振替
       sourceAccount = TransferSource.SMBC;
       destinationAccount = TransferSource.REAL_WALLET;
