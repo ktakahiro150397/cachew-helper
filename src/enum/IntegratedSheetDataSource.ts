@@ -15,9 +15,9 @@ export enum IntegratedSheetDataSource {
 export function getAccountName(dataSource: IntegratedSheetDataSource): string {
   switch (dataSource) {
     case IntegratedSheetDataSource.VPASS_CARD:
-      return "SMBC";
+      return "Vpass";
     case IntegratedSheetDataSource.VPASS_FAMILY:
-      return "SMBC_共有";
+      return "Vpass_共有";
     case IntegratedSheetDataSource.SMBC:
       return "SMBC";
     case IntegratedSheetDataSource.SBI_BANK:
