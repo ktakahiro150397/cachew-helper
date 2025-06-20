@@ -1,5 +1,6 @@
 import { CashewExportRow } from "../../interface/cashew-export";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
+import { getCategoryFromCashewData } from "./getCategoryFromCashewData";
 
 /**
  * 統合データをCashewのインポート仕様に合わせて整形し、出力シートに書き出します。
@@ -25,19 +26,28 @@ export function formatForCashew(
   //   「支払い方法」列は、レシートやカード明細から取得した「個人カード」「現金」などを入れます。
   //   「口座」列は、その取引がどの口座で行われたか（Cashew内の口座名）を入れます。
   //   振替の場合は「振替元」と「振替先」に具体的な口座名が入ります。
-  for (let i = 0; i < sourceData.length; i++) {
+  for (let i = 1; i < sourceData.length; i++) {
     const row = sourceData[i];
     const date = row[0];
     const amount = row[3];
-    const category = row[2] || "test_category";
+    let category = row[2] || "CashewHelper";
     const description = row[4];
 
-    const note = row[9] || "";
+    let note = row[9] || "";
     const account = row[10];
 
+    const sourceAccount = row[6]; // 振替元口座
+    const destinationAccount = row[7]; // 振替先口座
+
+    if (sourceAccount && destinationAccount) {
+      // 振替の場合、カテゴリを「振替」に設定
+      category = "振替";
+      note = `振替元: ${sourceAccount}, 振替先: ${destinationAccount} ${note}`;
+    } else {
+      category = getCategoryFromCashewData(description);
+    }
+
     // const paymentMethod = row[5];
-    // const sourceAccount = row[6]; // 振替元口座
-    // const destinationAccount = row[7]; // 振替先口座
     // const transactionType = row[8]; // 取引種別 (支出, 収入, 振替)
 
     const exportRow = CashewExportRow.create({
@@ -55,7 +65,7 @@ export function formatForCashew(
 
   if (outputRows.length > 1) {
     targetSheet
-      .getRange(1, 2, outputRows.length, outputRows[0].length)
+      .getRange(2, 1, outputRows.length, outputRows[0].length)
       .setValues(outputRows);
   }
 }

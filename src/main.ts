@@ -1,7 +1,3 @@
-import { sample } from "./sample";
-import { CashewExportRow } from "./interface/cashew-export";
-import { CashewCategory } from "./enum/cashew-category";
-import { CashewAccount } from "./enum/cashew-account";
 import { processTransaction } from "./handler/process-transaction";
 import { createReceiptTotalsMap } from "./core/receipt/createReceiptTotalsMap";
 import { formatDate } from "./core/util/dateformat";
@@ -11,6 +7,7 @@ import { processBankData } from "./core/bank/processBankData";
 import { processReceiptData } from "./core/receipt/processReceiptData";
 import { formatForCashew } from "./core/cashew/formatForCashew";
 import { writeIntegratedSheetHeader } from "./core/util/integrated-sheet";
+import { getCategoryFromCashewData } from "./core/cashew/getCategoryFromCashewData";
 
 // GAS上のエントリポイント
 (global as any).processTransaction = processTransaction;
@@ -22,6 +19,7 @@ import { writeIntegratedSheetHeader } from "./core/util/integrated-sheet";
 (global as any).processReceiptData = processReceiptData;
 (global as any).formatForCashew = formatForCashew;
 (global as any).writeIntegratedSheetHeader = writeIntegratedSheetHeader;
+(global as any).getCategoryFromCashewData = getCategoryFromCashewData;
 
 // const record: CashewExportRow = {
 //     Date: new Date(),

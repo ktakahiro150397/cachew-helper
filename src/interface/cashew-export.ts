@@ -1,6 +1,7 @@
 import { CashewCategory } from "../enum/cashew-category";
 import { CashewAccount } from "../enum/cashew-account";
 import { SpreadsheetRowData } from "../types/spreadsheet-types";
+import { getFormattedDate } from "../core/util/dateformat";
 
 /*
     Cashewエクスポートの行を表すインターフェース
@@ -44,6 +45,7 @@ export class CashewExportRow {
 
   getWriteData(): SpreadsheetRowData {
     return [
+      getFormattedDate(this.Date),
       this.Date,
       this.Amount,
       this.Category,
