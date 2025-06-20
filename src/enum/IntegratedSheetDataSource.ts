@@ -9,6 +9,7 @@ export enum IntegratedSheetDataSource {
   VPASS_FAMILY = "vpass_family",
   SMBC = "SMBC",
   SBI_BANK = "SBI",
+  REAL_WALLET = "財布", // 実際の財布（現金）
   OTHER = "other", // その他のデータソース
 }
 

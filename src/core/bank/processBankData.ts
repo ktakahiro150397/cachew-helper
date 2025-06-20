@@ -2,6 +2,9 @@ import { formatDate } from "../util/dateformat";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { IntegratedSheetDataRow } from "../../interface/IntegratedSheetDataRow";
 import { IntegratedSheetDataSource } from "../../enum/IntegratedSheetDataSource";
+import { CashewAccount } from "../../enum/cashew-account";
+import { TransactionType } from "../../enum/TransactionType";
+import { TransferSource } from "../../enum/TransferSource";
 
 /**
  * 銀行明細を処理し、統合データシートにコピーします。
@@ -26,16 +29,16 @@ export function processBankData(
     const amount_in = parseFloat(row[2]);
     const description = String(row[3]).trim();
 
-    let transactionType = "支出"; // デフォルトは支出
-    let sourceAccount = "";
-    let destinationAccount = "";
-    let paymentMethod = ""; // 銀行明細の場合、支払い方法の概念は薄い
+    let transactionType = TransactionType.EXPENSE; // デフォルトは支出
+    let sourceAccount: TransferSource = TransferSource.NONE;
+    let destinationAccount: TransferSource = TransferSource.NONE;
+    let paymentMethod = IntegratedSheetDataSource.SMBC;
 
     // 金額で収入/支出を判定
     if (!isNaN(amount_out)) {
-      transactionType = "支出";
+      transactionType = TransactionType.EXPENSE;
     } else {
-      transactionType = "収入";
+      transactionType = TransactionType.INCOME;
     }
 
     // 銀行明細の内容から「振替」を判定するロジック（例: ATM引き出し、口座間移動、カード引き落とし）
@@ -43,17 +46,17 @@ export function processBankData(
     // 例② ATMでの現金引き出し：「銀行口座」から「現金（財布）」へのお金の移動。
     // 例③ 口座間の資金移動：「自分口座」から「家族口座」へのお金の移動。
     if (description.includes("ENET")) {
-      transactionType = "振替"; // ATM引き出しは振替
-      sourceAccount = "SMBC"; // 例: SMBC, SBIネット銀行
-      destinationAccount = "現金"; // 「現金（お財布）」も一つの独立した口座として扱う
+      transactionType = TransactionType.TRANSFER; // ATM引き出しは振替
+      sourceAccount = TransferSource.SMBC;
+      destinationAccount = TransferSource.REAL_WALLET;
     } else if (description.includes("ﾐﾂｲｽﾐﾄﾓｶ-ﾄﾞ (ｶ")) {
-      transactionType = "振替"; // カード代金の支払いは振替
-      sourceAccount = "SMBC";
-      destinationAccount = "Vpass"; // 例: 個人カード, 家族カード
+      transactionType = TransactionType.TRANSFER; // カード代金の支払いは振替
+      sourceAccount = TransferSource.SMBC;
+      destinationAccount = TransferSource.VPASS_CARD;
     } else if (description.includes("SMBC(ｽﾐｼﾝSBIﾈﾂ")) {
-      transactionType = "振替"; // 口座間移動
-      sourceAccount = "SMBC";
-      destinationAccount = "SBI";
+      transactionType = TransactionType.TRANSFER; // 口座間移動
+      sourceAccount = TransferSource.SMBC;
+      destinationAccount = TransferSource.SBI_BANK;
     }
 
     const amount = isNaN(amount_out) ? amount_in : amount_out * -1;

@@ -2,6 +2,8 @@ import {
   getAccountName,
   IntegratedSheetDataSource,
 } from "../enum/IntegratedSheetDataSource";
+import { TransactionType } from "../enum/TransactionType";
+import { TransferSource } from "../enum/TransferSource";
 import { SpreadsheetRowData } from "../types/spreadsheet-types";
 
 export class IntegratedSheetDataRow {
@@ -24,9 +26,9 @@ export class IntegratedSheetDataRow {
     public amount: number,
     public description: string,
     public paymentMethod: string,
-    public transferFrom: string,
-    public transferTo: string,
-    public transactionType: string,
+    public transferFrom: TransferSource,
+    public transferTo: TransferSource,
+    public transactionType: TransactionType,
     public note: string,
     public dataSource: IntegratedSheetDataSource
   ) {}
@@ -38,9 +40,9 @@ export class IntegratedSheetDataRow {
     amount: number;
     description: string;
     paymentMethod: string;
-    transferFrom: string;
-    transferTo: string;
-    transactionType: string;
+    transferFrom: TransferSource;
+    transferTo: TransferSource;
+    transactionType: TransactionType;
     note: string;
     dataSource: IntegratedSheetDataSource;
   }): IntegratedSheetDataRow {
