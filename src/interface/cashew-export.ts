@@ -2,6 +2,7 @@ import { CashewCategory } from "../enum/cashew-category";
 import { CashewAccount } from "../enum/cashew-account";
 import { SpreadsheetRowData } from "../types/spreadsheet-types";
 import { getFormattedDate } from "../core/util/dateformat";
+import { IntegratedSheetDataSource } from "../enum/IntegratedSheetDataSource";
 
 /*
     Cashewエクスポートの行を表すインターフェース
@@ -22,7 +23,7 @@ export class CashewExportRow {
     public Category: CashewCategory,
     public Title: string,
     public Note: string,
-    public Account: CashewAccount
+    public Account: IntegratedSheetDataSource
   ) {}
 
   static create(data: {
@@ -31,7 +32,7 @@ export class CashewExportRow {
     Category: CashewCategory;
     Title: string;
     Note: string;
-    Account: CashewAccount;
+    Account: IntegratedSheetDataSource;
   }): CashewExportRow {
     return new CashewExportRow(
       data.Date,

@@ -1,3 +1,4 @@
+import { getIntegratedSheetTransferSourceName } from "../../enum/TransferSource";
 import { CashewExportRow } from "../../interface/cashew-export";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { getCategoryFromCashewData } from "./getCategoryFromCashewData";
@@ -43,6 +44,20 @@ export function formatForCashew(
       // 振替の場合、カテゴリを「振替」に設定
       category = "振替";
       note = `振替元: ${sourceAccount}, 振替先: ${destinationAccount} ${note}`;
+
+      // 振替先のレコードを追加で作成
+      {
+        const transferRow = CashewExportRow.create({
+          Date: date,
+          Amount: amount * -1, // 振替はマイナス金額で表現
+          Category: category,
+          Title: description,
+          Note: note,
+          Account: getIntegratedSheetTransferSourceName(destinationAccount), // 振替先口座を取得
+        });
+
+        outputRows.push(transferRow.getWriteData());
+      }
     } else {
       category = getCategoryFromCashewData(description);
     }

@@ -5,12 +5,12 @@
  * @enum {number}
  */
 export enum IntegratedSheetDataSource {
-  VPASS_CARD = "vpass_card",
-  VPASS_FAMILY = "vpass_family",
+  VPASS_CARD = "VPASS_CARD",
+  VPASS_FAMILY = "VPASS_FAMILY",
   SMBC = "SMBC",
-  SBI_BANK = "SBI",
-  REAL_WALLET = "財布", // 実際の財布（現金）
-  OTHER = "other", // その他のデータソース
+  SBI_BANK = "SBI_BANK",
+  REAL_WALLET = "REAL_WALLET", // 実際の財布（現金）
+  OTHER = "OTHER", // その他のデータソース
 }
 
 export function getAccountName(dataSource: IntegratedSheetDataSource): string {
