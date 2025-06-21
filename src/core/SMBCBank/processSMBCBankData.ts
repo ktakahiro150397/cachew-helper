@@ -13,7 +13,7 @@ import { getClensingDescription } from "./ClensingDescription";
  * @param {SpreadsheetData} bankData - ①入力_銀行シートの全データ。
  * @param {GoogleAppsScript.Spreadsheet.Sheet} integratedSheet - ④作業_統合データシート。
  */
-export function processBankData(
+export function processSMBCBankData(
   bankData: SpreadsheetData,
   integratedSheet: GoogleAppsScript.Spreadsheet.Sheet
 ) {
