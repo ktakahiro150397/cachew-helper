@@ -74,7 +74,6 @@ export function formatForCashew(
       Account: account, // 口座は振替元口座名を入れる
     });
 
-    console.log(exportRow.toString());
     outputRows.push(exportRow.getWriteData());
   }
 

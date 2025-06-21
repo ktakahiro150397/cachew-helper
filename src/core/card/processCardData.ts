@@ -3,6 +3,8 @@ import { determineCardTypeFromCardNo } from "./determineCardTypeFromDescription"
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { IntegratedSheetDataRow } from "../../interface/IntegratedSheetDataRow";
 import { IntegratedSheetDataSource } from "../../enum/IntegratedSheetDataSource";
+import { TransferSource } from "../../enum/TransferSource";
+import { TransactionType } from "../../enum/TransactionType";
 
 /*
 シート入力データ
@@ -90,9 +92,9 @@ export function processCardData(
         amount: amount,
         description: description, // 摘要
         paymentMethod: assumedPaymentMethod, // 支払い方法
-        transferFrom: "", // 振替元口座は空
-        transferTo: "", // 振替先口座は空
-        transactionType: "支出", // 取引種別は「支出」
+        transferFrom: TransferSource.NONE, // 振替元口座は空
+        transferTo: TransferSource.NONE, // 振替先口座は空
+        transactionType: TransactionType.EXPENSE, // 取引種別は「支出」
         note: note, // メモ
         dataSource: assumedPaymentMethod,
       });
