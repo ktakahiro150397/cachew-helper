@@ -9,6 +9,7 @@ import { formatForCashew } from "./core/cashew/formatForCashew";
 import { writeIntegratedSheetHeader } from "./core/util/integrated-sheet";
 import { getCategoryFromCashewData } from "./core/cashew/getCategoryFromCashewData";
 import { processSBIBankData } from "./core/SBIBank/processSBIBankData";
+import { exportBackup } from "./handler/export-backup";
 
 // GAS上のエントリポイント
 (global as any).processTransaction = processTransaction;
@@ -23,13 +24,4 @@ import { processSBIBankData } from "./core/SBIBank/processSBIBankData";
 (global as any).writeIntegratedSheetHeader = writeIntegratedSheetHeader;
 (global as any).getCategoryFromCashewData = getCategoryFromCashewData;
 
-// const record: CashewExportRow = {
-//     Date: new Date(),
-//     Amount: 0,
-//     Category: CashewCategory.Groceries,
-//     Title: "",
-//     Note: "",
-//     Account: CashewAccount.SMBC_Main,
-// };
-
-// console.log(record);
+(global as any).exportBackup = exportBackup;
