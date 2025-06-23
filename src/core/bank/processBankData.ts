@@ -2,7 +2,6 @@ import { formatDate } from "../util/dateformat";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { IntegratedSheetDataRow } from "../../interface/IntegratedSheetDataRow";
 import { IntegratedSheetDataSource } from "../../enum/IntegratedSheetDataSource";
-import { CashewAccount } from "../../enum/cashew-account";
 import { TransactionType } from "../../enum/TransactionType";
 import { TransferSource } from "../../enum/TransferSource";
 import { getClensingDescription } from "./ClensingDescription";

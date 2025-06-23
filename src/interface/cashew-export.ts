@@ -1,5 +1,4 @@
 import { CashewCategory } from "../enum/cashew-category";
-import { CashewAccount } from "../enum/cashew-account";
 import { SpreadsheetRowData } from "../types/spreadsheet-types";
 import { getFormattedDate } from "../core/util/dateformat";
 import { IntegratedSheetDataSource } from "../enum/IntegratedSheetDataSource";
