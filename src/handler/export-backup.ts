@@ -19,11 +19,19 @@ export function exportBackup(): void {
   }
 
   // CashewImportシートのデータを取得
-  const dataRange = cashewImportSheet.getDataRange();
+  const dataRange = cashewImportSheet.getRange("A:G");
   const dataValues = dataRange.getValues();
 
-  // バックアップシートの最終行を取得
-  const lastRow = backupSheet.getLastRow();
+  // バックアップシートのA:Hのうちどれかにデータが入っている最終行を取得
+  const backupValues = backupSheet.getRange("A:G").getValues();
+  let lastRow = 0;
+  for (let i = 0; i < backupValues.length; i++) {
+    if (backupValues[i].some((cell) => cell !== "" && cell !== null)) {
+      lastRow = i + 1; // 1-indexed
+    }
+  }
+
+  Logger.log(`バックアップシートの最終行: ${lastRow}`);
 
   // バックアップシートにデータを追記
   if (dataValues.length > 1) {
