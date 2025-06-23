@@ -57,6 +57,14 @@ export function processBankData(
       transactionType = TransactionType.TRANSFER; // 口座間移動
       sourceAccount = TransferSource.SMBC;
       destinationAccount = TransferSource.SBI_BANK;
+    } else if (description.includes("ｼﾞﾄﾞｳｿｳｷﾝ")) {
+      transactionType = TransactionType.TRANSFER; // 自動送金
+      sourceAccount = TransferSource.SMBC;
+      destinationAccount = TransferSource.CHILD_ACCOUNT;
+    } else if (description.includes("パソコン振込 ｺｲｹ ﾄﾓﾔ")) {
+      transactionType = TransactionType.TRANSFER; // パソコン振込
+      sourceAccount = TransferSource.SMBC;
+      destinationAccount = TransferSource.CHILD_ACCOUNT;
     }
 
     const amount = isNaN(amount_out) ? amount_in : amount_out * -1;

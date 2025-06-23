@@ -1,7 +1,10 @@
+import { getAccountName } from "../../enum/IntegratedSheetDataSource";
 import { getIntegratedSheetTransferSourceName } from "../../enum/TransferSource";
 import { CashewExportRow } from "../../interface/cashew-export";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { getCategoryFromCashewData } from "./getCategoryFromCashewData";
+
+const DATA_DATE_START_THRESHOLD = new Date("2025-04-01");
 
 /**
  * 統合データをCashewのインポート仕様に合わせて整形し、出力シートに書き出します。
@@ -35,10 +38,15 @@ export function formatForCashew(
     const description = row[4];
 
     let note = row[9] || "";
-    const account = row[10];
+    const account: string = row[10];
 
     const sourceAccount = row[6]; // 振替元口座
     const destinationAccount = row[7]; // 振替先口座
+
+    // 指定日時より前のデータは無視する
+    if (date < DATA_DATE_START_THRESHOLD) {
+      continue;
+    }
 
     if (sourceAccount && destinationAccount) {
       // 振替の場合、カテゴリを「振替」に設定
@@ -53,7 +61,9 @@ export function formatForCashew(
           Category: category,
           Title: description,
           Note: note,
-          Account: getIntegratedSheetTransferSourceName(destinationAccount), // 振替先口座を取得
+          Account: getAccountName(
+            getIntegratedSheetTransferSourceName(destinationAccount)
+          ), // 振替先口座を取得
         });
 
         outputRows.push(transferRow.getWriteData());

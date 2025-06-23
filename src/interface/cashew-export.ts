@@ -22,7 +22,7 @@ export class CashewExportRow {
     public Category: CashewCategory,
     public Title: string,
     public Note: string,
-    public Account: IntegratedSheetDataSource
+    public Account: string
   ) {}
 
   static create(data: {
@@ -31,7 +31,7 @@ export class CashewExportRow {
     Category: CashewCategory;
     Title: string;
     Note: string;
-    Account: IntegratedSheetDataSource;
+    Account: string;
   }): CashewExportRow {
     return new CashewExportRow(
       data.Date,
