@@ -5,6 +5,7 @@ import { createReceiptTotalsMap } from "../core/receipt/createReceiptTotalsMap";
 import { processReceiptData } from "../core/receipt/processReceiptData";
 import { clearSheet } from "../sheetoperation/sheet-operation";
 import { writeIntegratedSheetHeader } from "../core/util/integrated-sheet";
+import { processSBIBankData } from "../core/SBIBank/processSBIBankData";
 /**
  * メイン実行関数（スプレッドシートのボタンに紐付けます）
  * 複数のデータソースから取引情報を収集し、Googleスプレッドシート上で統合・整形、
@@ -75,6 +76,8 @@ export function processTransaction() {
 
     // SBI明細の処理
     const sbiData = sbiSheet.getDataRange().getValues();
+    processSBIBankData(sbiData, integratedSheet);
+    Logger.log("SBI銀行明細の処理が完了しました。");
 
     // 5. レシートデータの処理
     // ③入力_レシートの全データを④作業_統合データにコピーする。各行は取引種別「支出」として扱う。

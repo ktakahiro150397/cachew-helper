@@ -8,9 +8,11 @@ import { processReceiptData } from "./core/receipt/processReceiptData";
 import { formatForCashew } from "./core/cashew/formatForCashew";
 import { writeIntegratedSheetHeader } from "./core/util/integrated-sheet";
 import { getCategoryFromCashewData } from "./core/cashew/getCategoryFromCashewData";
+import { processSBIBankData } from "./core/SBIBank/processSBIBankData";
 
 // GAS上のエントリポイント
 (global as any).processTransaction = processTransaction;
+(global as any).processSBIBankData = processSBIBankData;
 (global as any).createReceiptTotalsMap = createReceiptTotalsMap;
 (global as any).formatDate = formatDate;
 (global as any).processCardData = processCardData;
