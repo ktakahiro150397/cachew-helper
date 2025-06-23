@@ -1,10 +1,11 @@
-import { processBankData } from "../core/bank/processBankData";
+import { processSMBCBankData } from "../core/SMBCBank/processSMBCBankData";
 import { processCardData } from "../core/card/processCardData";
 import { formatForCashew } from "../core/cashew/formatForCashew";
 import { createReceiptTotalsMap } from "../core/receipt/createReceiptTotalsMap";
 import { processReceiptData } from "../core/receipt/processReceiptData";
 import { clearSheet } from "../sheetoperation/sheet-operation";
 import { writeIntegratedSheetHeader } from "../core/util/integrated-sheet";
+import { processSBIBankData } from "../core/SBIBank/processSBIBankData";
 /**
  * メイン実行関数（スプレッドシートのボタンに紐付けます）
  * 複数のデータソースから取引情報を収集し、Googleスプレッドシート上で統合・整形、
@@ -18,6 +19,7 @@ export function processTransaction() {
   const cardSheet = ss.getSheetByName("②入力_カード");
   const receiptSheet = ss.getSheetByName("③入力_レシート");
   const integratedSheet = ss.getSheetByName("④作業_統合データ");
+  const sbiSheet = ss.getSheetByName("入力_SBI");
   const outputSheet = ss.getSheetByName("⑤出力_Cashew用");
   const outputSheet2 = ss.getSheetByName("CashewImport");
 
@@ -26,6 +28,7 @@ export function processTransaction() {
     !cardSheet ||
     !receiptSheet ||
     !integratedSheet ||
+    !sbiSheet ||
     !outputSheet ||
     !outputSheet2
   ) {
@@ -68,8 +71,13 @@ export function processTransaction() {
     // 4. 銀行明細の処理
     // ①入力_銀行 のデータを1行ずつ読み込み、明細の内容から取引種別（支出, 収入, 振替）を判定し、④作業_統合データにコピーする。
     const bankData = bankSheet.getDataRange().getValues();
-    processBankData(bankData, integratedSheet);
+    processSMBCBankData(bankData, integratedSheet);
     Logger.log("銀行明細の処理が完了しました。");
+
+    // SBI明細の処理
+    const sbiData = sbiSheet.getDataRange().getValues();
+    processSBIBankData(sbiData, integratedSheet);
+    Logger.log("SBI銀行明細の処理が完了しました。");
 
     // 5. レシートデータの処理
     // ③入力_レシートの全データを④作業_統合データにコピーする。各行は取引種別「支出」として扱う。

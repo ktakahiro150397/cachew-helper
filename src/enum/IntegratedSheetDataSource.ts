@@ -23,7 +23,7 @@ export function getAccountName(dataSource: IntegratedSheetDataSource): string {
     case IntegratedSheetDataSource.SMBC:
       return "nSMBC";
     case IntegratedSheetDataSource.SBI_BANK:
-      return "nSBI";
+      return "nSBI_BANK";
     case IntegratedSheetDataSource.REAL_WALLET:
       return "n現金";
     case IntegratedSheetDataSource.CHILD_ACCOUNT:
