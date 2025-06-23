@@ -45,8 +45,8 @@ export function processTransaction() {
     // 1. 初期化処理
     // ④作業_統合データ と ⑤出力_Cashew用 の2つのシートの内容をクリアする。
     clearSheet(integratedSheet);
-    clearSheet(outputSheet);
-    clearSheet(outputSheet2);
+    clearSheet(outputSheet, 7);
+    clearSheet(outputSheet2, 7);
 
     // ④作業_統合データシートのヘッダーを設定する
     writeIntegratedSheetHeader(integratedSheet);
