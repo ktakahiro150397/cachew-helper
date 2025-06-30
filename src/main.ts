@@ -10,6 +10,7 @@ import { writeIntegratedSheetHeader } from "./core/util/integrated-sheet";
 import { getCategoryFromCashewData } from "./core/cashew/getCategoryFromCashewData";
 import { processSBIBankData } from "./core/SBIBank/processSBIBankData";
 import { exportBackup } from "./handler/export-backup";
+import { onFormSubmit } from "./handler/form-submit";
 
 // GAS上のエントリポイント
 (global as any).processTransaction = processTransaction;
@@ -25,3 +26,5 @@ import { exportBackup } from "./handler/export-backup";
 (global as any).getCategoryFromCashewData = getCategoryFromCashewData;
 
 (global as any).exportBackup = exportBackup;
+
+(global as any).onFormSubmit = onFormSubmit;

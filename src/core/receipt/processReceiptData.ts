@@ -2,6 +2,8 @@ import { formatDate } from "../util/dateformat";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { IntegratedSheetDataRow } from "../../interface/IntegratedSheetDataRow";
 import { IntegratedSheetDataSource } from "../../enum/IntegratedSheetDataSource";
+import { TransferSource } from "../../enum/TransferSource";
+import { TransactionType } from "../../enum/TransactionType";
 
 /**
  * レシートデータを処理し、統合データシートにコピーします。
@@ -42,9 +44,9 @@ export function processReceiptData(
       amount: amount * -1, // 金額は支出なので負の数
       description: shopName, // 摘要（店名）
       paymentMethod: paymentMethod, // 支払い方法
-      transferFrom: "", // 振替元口座は空
-      transferTo: "", // 振替先口座は空
-      transactionType: "支出", // 取引種別は「支出」
+      transferFrom: TransferSource.NONE, // 振替元口座は空
+      transferTo: TransferSource.NONE, // 振替先口座は空
+      transactionType: TransactionType.EXPENSE, // 取引種別は「支出」
       note: "", // メモは空
       dataSource: IntegratedSheetDataSource.OTHER,
     });
