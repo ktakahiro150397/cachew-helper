@@ -76,6 +76,8 @@ export function onFormSubmit(e: GoogleAppsScript.Events.SheetsOnFormSubmit) {
             continue;
         }
 
+        const payment_method = formDataValues[i][1].trim();
+
         // 画像URLそれぞれに対して処理を行う
         const imageUrl = formDataValues[i][2].split(",");
         if (imageUrl.length === 0 || imageUrl[0].trim() === "") {
@@ -90,7 +92,7 @@ export function onFormSubmit(e: GoogleAppsScript.Events.SheetsOnFormSubmit) {
             const imageBlob = UrlFetchApp.fetch(imageUrl[j].trim()).getBlob();
 
             // 2.画像を取得してOCR結果を取得
-            const ocrResult = performOCR(imageBlob);
+            const ocrResult = performOCR(imageBlob, payment_method);
 
             // 3.結果を「③入力_レシート」シートに追加
             const receiptSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("③入力_レシート");
@@ -118,6 +120,7 @@ export function onFormSubmit(e: GoogleAppsScript.Events.SheetsOnFormSubmit) {
 class OCRResult {
     constructor(
         public date: string,
+        public payment_method: string,
         public details: Array<{name: string, price: number}>,
         public note: string,
         public ocr_warning: string,
@@ -131,6 +134,7 @@ class OCRResult {
         for(const detail of this.details) {
             const rowData = [
                 receiptId, // レシートID
+                this.payment_method, // 支払い方法
                 this.date,
                 this.store_name,
                 detail.name,
@@ -147,10 +151,11 @@ class OCRResult {
 }
 
 
-function performOCR(imageBlob: GoogleAppsScript.Base.Blob): OCRResult {
+function performOCR(imageBlob: GoogleAppsScript.Base.Blob, payment_method: string): OCRResult {
     // TODO : 実際のOCR処理を実装する(Gemini APi経由)
     return new OCRResult(
         "2024/09/21",
+        payment_method,
         [
             {"name": "レギュラー+70", "price": 300}, 
             {"name": "ポテトM", "price": 360}, 
