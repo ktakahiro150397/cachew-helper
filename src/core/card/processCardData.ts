@@ -72,7 +72,7 @@ export function processCardData(
     Logger.log(
       `カード番号: ${cardNumber}, assumedPaymentMethod: ${assumedPaymentMethod}`
     );
-    const key = `${date}_${assumedPaymentMethod}_${amount}`; // 金額は絶対値で比較
+    const key = `${assumedPaymentMethod}_${date}_${amount}`; // 支払方法_日付_金額の形式に変更
 
     // マップに一致するデータがあるか照合
     if (receiptTotalsMap.has(key)) {
