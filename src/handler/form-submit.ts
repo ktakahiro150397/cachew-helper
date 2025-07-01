@@ -99,10 +99,14 @@ export function onFormSubmit(e: GoogleAppsScript.Events.SheetsOnFormSubmit) {
                 return;
             }
 
-            const writeData = ocrResult.getWriteData();
+            const writeData = ocrResult.getWriteData(receiptId);
             for (const rowData of writeData) {
                 receiptSheet.appendRow(rowData);
             }
+
+            var receiptSheetValue = (formSheet.getRange(i + 2, 9).getValue() as string).trim().split(",");
+            receiptSheetValue.push(receiptId);
+            formSheet.getRange(i + 2, 9).setValue(receiptSheetValue.join(","));           
             Logger.log("OCR結果を「③入力_レシート」シートに追加しました。");
         }
 
@@ -118,18 +122,21 @@ class OCRResult {
         public note: string,
         public ocr_warning: string,
         public price_sum: number,
-        public store_name: string
+        public store_name: string,
+        public sum_warning: boolean
     ) {}
 
-    public getWriteData(): Array<any> {
+    public getWriteData(receiptId:string): Array<any> {
         const ret = [];
         for(const detail of this.details) {
             const rowData = [
+                receiptId, // レシートID
                 this.date,
                 this.store_name,
                 detail.name,
                 detail.price,
                 this.note,
+                this.sum_warning,
                 this.ocr_warning,
             ]
 
@@ -141,6 +148,7 @@ class OCRResult {
 
 
 function performOCR(imageBlob: GoogleAppsScript.Base.Blob): OCRResult {
+    // TODO : 実際のOCR処理を実装する(Gemini APi経由)
     return new OCRResult(
         "2024/09/21",
         [
@@ -151,11 +159,13 @@ function performOCR(imageBlob: GoogleAppsScript.Base.Blob): OCRResult {
             {"name": "オニオン&ポテト", "price": 270}, 
             {"name": "メロンM", "price": -120}, 
             {"name": "テリヤキチキン", "price": 450}, 
-            {"name": "モスバーガー", "price": 440}
+            {"name": "モスバーガー", "price": 440},
+            {"name": `test項目 ${(new Date()).toLocaleString()}`, "price": 9999}
         ],
         "どっちもおいしい月見です♪パリとろ食感の、月見。サクじゅわ食感の、裏月見。",
         "なし",
         1860,
-        "MOS BURGER 神戸伊川谷店"
+        "MOS BURGER 神戸伊川谷店",
+        (new Date().getSeconds() % 2 === 0) ? true : false // 偶数秒なら合計金額が正しいとする
     );
 }
