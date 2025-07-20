@@ -1,10 +1,15 @@
-import { getAccountName } from "../../enum/IntegratedSheetDataSource";
+import { CashewCategory } from "./../../enum/cashew-category";
+import {
+  getAccountName,
+  IntegratedSheetDataSource,
+} from "../../enum/IntegratedSheetDataSource";
 import { getIntegratedSheetTransferSourceName } from "../../enum/TransferSource";
 import { CashewExportRow } from "../../interface/cashew-export";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { getCategoryFromCashewData } from "./getCategoryFromCashewData";
+import { formatDate } from "../util/dateformat";
 
-const DATA_DATE_START_THRESHOLD = new Date("2025-04-01");
+const DATA_DATE_START_THRESHOLD = new Date("2024-04-01");
 
 /**
  * 統合データをCashewのインポート仕様に合わせて整形し、出力シートに書き出します。
@@ -65,6 +70,17 @@ export function formatForCashew(
             getIntegratedSheetTransferSourceName(destinationAccount)
           ), // 振替先口座を取得
         });
+
+        if (
+          sourceAccount == IntegratedSheetDataSource.SMBC &&
+          destinationAccount == IntegratedSheetDataSource.VPASS_CARD
+        ) {
+          // Vpassカード利用料金の場合、日付を前月末日とする
+          transferRow.Note = `${note} Vpassカード利用料金 実請求日：${formatDate(
+            date
+          )} `;
+          transferRow.Date = new Date(date.getFullYear(), date.getMonth(), 0); // 前月末日
+        }
 
         outputRows.push(transferRow.getWriteData());
       }

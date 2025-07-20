@@ -1,4 +1,4 @@
-const income = ["給料振込", "普通預金利息", "振込　"];
+const income = ["給料振込", "普通預金利息", "振込　", "利息"];
 
 const insurance = [
   "プルデンシャル生命保険",
@@ -15,7 +15,7 @@ const spelulation = [
   "EZASIA ", // Vantage FX
 ];
 
-const tax = ["PE ﾋﾖｳｺﾞｹﾝｱｶｼｼ", "PE ﾆｼﾉﾐﾔｼｹｲｼﾞﾄﾞｳｼﾔｾﾞｲ"];
+const tax = ["PE ﾋﾖｳｺﾞｹﾝｱｶｼｼ", "PE ﾆｼﾉﾐﾔｼｹｲｼﾞﾄﾞｳｼﾔｾﾞｲ", "地方税", "国税"];
 
 const sending = [
   "パソコン振込 ",
@@ -23,6 +23,11 @@ const sending = [
   "りぼん",
   "振込手数料",
   "パソコン振替",
+  "普通　円　アルストロメリア",
+  "振込＊",
+  "ことら送金",
+  "ＳＢＩハイブリッド預金",
+  "SMBC(ｽﾐｼﾝSBIﾈﾂ",
 ];
 
 const receiving = ["CT "];
@@ -38,6 +43,8 @@ const subscription = [
   "Ａｍａｚｏｎプライム会費",
   "GITHUB, INC. (GITHUB.COM )",
   "ユーネクストサービス利用料",
+  "振込＊カ）サカグチモータース",
+  "振込＊ド）　キンリヨウ",
 ];
 
 const transport = [
@@ -193,6 +200,10 @@ export function getCategoryFromCashewData(description: string): string {
     return "税金";
   }
 
+  if (subscription.some((prefix) => description.startsWith(prefix))) {
+    return "サブスクリプション";
+  }
+
   if (sending.some((prefix) => description.startsWith(prefix))) {
     return "送金";
   }
@@ -207,10 +218,6 @@ export function getCategoryFromCashewData(description: string): string {
 
   if (loan.some((prefix) => description.startsWith(prefix))) {
     return "ローン";
-  }
-
-  if (subscription.some((prefix) => description.startsWith(prefix))) {
-    return "サブスクリプション";
   }
 
   if (transport.some((prefix) => description.startsWith(prefix))) {

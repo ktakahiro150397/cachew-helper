@@ -53,10 +53,11 @@ export function processSMBCBankData(
       transactionType = TransactionType.TRANSFER; // カード代金の支払いは振替
       sourceAccount = TransferSource.SMBC;
       destinationAccount = TransferSource.VPASS_CARD;
-    } else if (description.includes("SMBC(ｽﾐｼﾝSBIﾈﾂ")) {
-      transactionType = TransactionType.TRANSFER; // 口座間移動
-      sourceAccount = TransferSource.SMBC;
-      destinationAccount = TransferSource.SBI_BANK;
+      // SBI定額自動入金は振替として扱わない（SBI側で入金明細が作成されるため）
+      // } else if (description.includes("SMBC(ｽﾐｼﾝSBIﾈﾂ")) {
+      //   transactionType = TransactionType.TRANSFER; // 口座間移動
+      //   sourceAccount = TransferSource.SMBC;
+      //   destinationAccount = TransferSource.SBI_BANK;
     } else if (description.includes("ｼﾞﾄﾞｳｿｳｷﾝ")) {
       transactionType = TransactionType.TRANSFER; // 自動送金
       sourceAccount = TransferSource.SMBC;
