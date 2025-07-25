@@ -17,6 +17,7 @@ export function processTransaction() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const bankSheet = ss.getSheetByName("①入力_銀行");
   const cardSheet = ss.getSheetByName("②入力_カード");
+  const sharedCardSheet = ss.getSheetByName("②入力_共有カード");
   const receiptSheet = ss.getSheetByName("③入力_レシート");
   const integratedSheet = ss.getSheetByName("④作業_統合データ");
   const sbiSheet = ss.getSheetByName("入力_SBI");
@@ -26,6 +27,7 @@ export function processTransaction() {
   if (
     !bankSheet ||
     !cardSheet ||
+    !sharedCardSheet ||
     !receiptSheet ||
     !integratedSheet ||
     !sbiSheet ||
@@ -34,7 +36,7 @@ export function processTransaction() {
   ) {
     Browser.msgBox(
       "エラー",
-      "必要なシートが見つかりません。シート名が正しいか確認してください。（①入力_銀行, ②入力_カード, ③入力_レシート, ④作業_統合データ, ⑤出力_Cashew用）",
+      "必要なシートが見つかりません。シート名が正しいか確認してください。（①入力_銀行, ②入力_カード, ③入力_共有カード, ③入力_レシート, ④作業_統合データ, ⑤出力_Cashew用）",
       Browser.Buttons.OK
     );
     Logger.log("必要なシートが見つかりません。処理を中止します。");
@@ -60,13 +62,21 @@ export function processTransaction() {
     const receiptTotalsMap = createReceiptTotalsMap(receiptData);
     Logger.log("レシートデータの前処理が完了しました。");
 
-    // 3. カード明細の処理
+    // 3-1. カード明細の処理
     // ②入力_カード のデータを1行ずつ読み込み、手順2で作成したマップに一致するデータがあるか照合する。
     // 一致した場合（レシートあり）：このカード明細行は無視する。
     // 一致しない場合（レシートなし）：このカード明細行を、取引種別「支出」として④作業_統合データにコピーする。
     const cardData = cardSheet.getDataRange().getValues();
     processCardData(cardData, receiptTotalsMap, integratedSheet);
     Logger.log("カード明細の処理が完了しました。");
+
+    // 3-2. 共有カード明細の処理
+    // ②入力_共有カード のデータを1行ずつ読み込み、手順2で作成したマップに一致するデータがあるか照合する。
+    // 一致した場合（レシートあり）：この共有カード明細行は無視する。
+    // 一致しない場合（レシートなし）：この共有カード明細行を、取引種別「支出」として④作業_統合データにコピーする。
+    const sharedCardData = sharedCardSheet.getDataRange().getValues();
+    processCardData(sharedCardData, receiptTotalsMap, integratedSheet);
+    Logger.log("共有カード明細の処理が完了しました。");
 
     // 4. 銀行明細の処理
     // ①入力_銀行 のデータを1行ずつ読み込み、明細の内容から取引種別（支出, 収入, 振替）を判定し、④作業_統合データにコピーする。

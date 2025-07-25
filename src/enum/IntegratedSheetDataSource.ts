@@ -17,20 +17,20 @@ export enum IntegratedSheetDataSource {
 export function getAccountName(dataSource: IntegratedSheetDataSource): string {
   switch (dataSource) {
     case IntegratedSheetDataSource.VPASS_CARD:
-      return "nVpass";
+      return "Vpass";
     case IntegratedSheetDataSource.VPASS_FAMILY:
-      return "nVpass_共有";
+      return "Vpass_共有";
     case IntegratedSheetDataSource.SMBC:
-      return "nSMBC";
+      return "SMBC";
     case IntegratedSheetDataSource.SBI_BANK:
-      return "nSBI_BANK";
+      return "SBI_BANK";
     case IntegratedSheetDataSource.REAL_WALLET:
-      return "n現金";
+      return "現金";
     case IntegratedSheetDataSource.CHILD_ACCOUNT:
-      return "n子供口座";
+      return "子供口座";
     case IntegratedSheetDataSource.OTHER:
-      return "nその他";
+      return "その他";
     default:
-      return "n不明";
+      return "不明";
   }
 }
