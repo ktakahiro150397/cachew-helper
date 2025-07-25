@@ -21,7 +21,6 @@ export function processTransaction() {
   const receiptSheet = ss.getSheetByName("③入力_レシート");
   const integratedSheet = ss.getSheetByName("④作業_統合データ");
   const sbiSheet = ss.getSheetByName("入力_SBI");
-  const outputSheet = ss.getSheetByName("⑤出力_Cashew用");
   const outputSheet2 = ss.getSheetByName("CashewImport");
 
   if (
@@ -31,7 +30,6 @@ export function processTransaction() {
     !receiptSheet ||
     !integratedSheet ||
     !sbiSheet ||
-    !outputSheet ||
     !outputSheet2
   ) {
     Browser.msgBox(
@@ -47,7 +45,6 @@ export function processTransaction() {
     // 1. 初期化処理
     // ④作業_統合データ と ⑤出力_Cashew用 の2つのシートの内容をクリアする。
     clearSheet(integratedSheet);
-    clearSheet(outputSheet, 7);
     clearSheet(outputSheet2, 7);
 
     // ④作業_統合データシートのヘッダーを設定する
@@ -101,7 +98,6 @@ export function processTransaction() {
     Logger.log(
       "統合データの取得が完了しました。行数: " + integratedData.length
     );
-    formatForCashew(integratedData, outputSheet);
     formatForCashew(integratedData, outputSheet2);
     Logger.log("最終データへの整形・出力が完了しました。");
   } catch (e: any) {

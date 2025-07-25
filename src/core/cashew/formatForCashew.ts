@@ -4,7 +4,7 @@ import { CashewExportRow } from "../../interface/cashew-export";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { getCategoryFromCashewData } from "./getCategoryFromCashewData";
 
-const DATA_DATE_START_THRESHOLD = new Date("2025-04-01");
+const DATA_DATE_START_THRESHOLD = new Date("2024-04-01");
 
 /**
  * 統合データをCashewのインポート仕様に合わせて整形し、出力シートに書き出します。

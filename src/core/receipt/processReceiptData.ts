@@ -52,12 +52,13 @@ export function processReceiptData(
       dataSource = IntegratedSheetDataSource.REAL_WALLET;
     }
 
+    const descriptionWithShop = shopName ? `${shopName} - ${description}` : description;
     const integratedData = IntegratedSheetDataRow.create({
       date: new Date(date),
       account: paymentMethod, // 勘定科目を支払い方法に設定
       category: category, // カテゴリは空白
       amount: amount * -1, // 金額は支出なので負の数
-      description: shopName ? shopName : description, // 摘要（店名または摘要）
+      description: descriptionWithShop,
       paymentMethod: paymentMethod, // 支払い方法
       transferFrom: TransferSource.NONE, // 振替元口座は空
       transferTo: TransferSource.NONE, // 振替先口座は空
