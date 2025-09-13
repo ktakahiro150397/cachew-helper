@@ -16,6 +16,7 @@ export function processTransaction() {
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const bankSheet = ss.getSheetByName("①入力_銀行");
+  const sharedBankSheet = ss.getSheetByName("①入力_共有銀行");
   const cardSheet = ss.getSheetByName("②入力_カード");
   const sharedCardSheet = ss.getSheetByName("②入力_共有カード");
   const receiptSheet = ss.getSheetByName("③入力_レシート");
@@ -25,6 +26,7 @@ export function processTransaction() {
 
   if (
     !bankSheet ||
+    !sharedBankSheet ||
     !cardSheet ||
     !sharedCardSheet ||
     !receiptSheet ||
@@ -34,7 +36,7 @@ export function processTransaction() {
   ) {
     Browser.msgBox(
       "エラー",
-      "必要なシートが見つかりません。シート名が正しいか確認してください。（①入力_銀行, ②入力_カード, ③入力_共有カード, ③入力_レシート, ④作業_統合データ, ⑤出力_Cashew用）",
+      "必要なシートが見つかりません。シート名が正しいか確認してください。（①入力_銀行, ①入力_共有銀行, ②入力_カード, ③入力_共有カード, ③入力_レシート, ④作業_統合データ, ⑤出力_Cashew用）",
       Browser.Buttons.OK
     );
     Logger.log("必要なシートが見つかりません。処理を中止します。");
@@ -80,6 +82,11 @@ export function processTransaction() {
     const bankData = bankSheet.getDataRange().getValues();
     processSMBCBankData(bankData, integratedSheet);
     Logger.log("銀行明細の処理が完了しました。");
+
+    // 4-2. 共有銀行明細の処理
+    const sharedBankData = sharedBankSheet.getDataRange().getValues();
+    processSMBCBankData(sharedBankData, integratedSheet);
+    Logger.log("共有銀行明細の処理が完了しました。");
 
     // SBI明細の処理
     const sbiData = sbiSheet.getDataRange().getValues();
