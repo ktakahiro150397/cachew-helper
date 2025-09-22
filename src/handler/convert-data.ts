@@ -1,6 +1,7 @@
 import { IIdealDataConverter } from "../core/converter/convertData";
 import { SBINetBankIdealDataConverter } from "../core/converter/convertSBINetBankData";
 import { SMBCBankIdealDataConverter } from "../core/converter/convertSMBCBankData";
+import { VpassIdealDataConverter } from "../core/converter/convertVpassData";
 import { ExpenseFrom, IdealSheetRow } from "../interface/IdealSheet";
 import { clearSheet } from "../sheetoperation/sheet-operation";
 
@@ -10,8 +11,9 @@ export function convertDataToIdealSheet() {
   const ideal = ss.getSheetByName("集計結果");
   const smbc = ss.getSheetByName("SMBC");
   const sbi = ss.getSheetByName("SBI");
+  const vpass = ss.getSheetByName("Vpass");
 
-  if (!ideal || !smbc || !sbi) {
+  if (!ideal || !smbc || !sbi || !vpass) {
     Browser.msgBox(
       "エラー",
       "必要なシートが見つかりません。シート名が正しいか確認してください。（SMBC）",
@@ -43,6 +45,16 @@ export function convertDataToIdealSheet() {
       );
       addDataToIdealSheet(ideal, sbiConverter);
     }
+
+    {
+      const vpassSheetValues = vpass.getDataRange().getValues();
+      const vpassConverter = new VpassIdealDataConverter(
+        vpassSheetValues,
+        ExpenseFrom.Takahiro_Vpass
+      );
+      addDataToIdealSheet(ideal, vpassConverter);
+    }
+    
   } catch (error) {
     Logger.log("エラーが発生しました: " + (error as Error).message);
     Browser.msgBox(
