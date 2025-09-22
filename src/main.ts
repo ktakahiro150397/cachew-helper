@@ -11,6 +11,7 @@ import { getCategoryFromCashewData } from "./core/cashew/getCategoryFromCashewDa
 import { processSBIBankData } from "./core/SBIBank/processSBIBankData";
 import { exportBackup } from "./handler/export-backup";
 import { onFormSubmit, onFormSubmitTest } from "./handler/form-submit";
+import { convertDataToIdealSheet } from "./handler/convert-data";
 
 // GAS上のエントリポイント
 (global as any).processTransaction = processTransaction;
@@ -29,3 +30,6 @@ import { onFormSubmit, onFormSubmitTest } from "./handler/form-submit";
 
 (global as any).onFormSubmit = onFormSubmit;
 (global as any).onFormSubmitTest = onFormSubmitTest;
+
+(global as any).convertDataToIdealSheet = convertDataToIdealSheet;
+

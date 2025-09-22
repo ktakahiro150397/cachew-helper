@@ -73,9 +73,9 @@ export function processTransaction() {
     // ②入力_共有カード のデータを1行ずつ読み込み、手順2で作成したマップに一致するデータがあるか照合する。
     // 一致した場合（レシートあり）：この共有カード明細行は無視する。
     // 一致しない場合（レシートなし）：この共有カード明細行を、取引種別「支出」として④作業_統合データにコピーする。
-    const sharedCardData = sharedCardSheet.getDataRange().getValues();
-    processCardData(sharedCardData, receiptTotalsMap, integratedSheet);
-    Logger.log("共有カード明細の処理が完了しました。");
+    // const sharedCardData = sharedCardSheet.getDataRange().getValues();
+    // processCardData(sharedCardData, receiptTotalsMap, integratedSheet);
+    // Logger.log("共有カード明細の処理が完了しました。");
 
     // 4. 銀行明細の処理
     // ①入力_銀行 のデータを1行ずつ読み込み、明細の内容から取引種別（支出, 収入, 振替）を判定し、④作業_統合データにコピーする。
@@ -84,9 +84,9 @@ export function processTransaction() {
     Logger.log("銀行明細の処理が完了しました。");
 
     // 4-2. 共有銀行明細の処理
-    const sharedBankData = sharedBankSheet.getDataRange().getValues();
-    processSMBCBankData(sharedBankData, integratedSheet);
-    Logger.log("共有銀行明細の処理が完了しました。");
+    // const sharedBankData = sharedBankSheet.getDataRange().getValues();
+    // processSMBCBankData(sharedBankData, integratedSheet);
+    // Logger.log("共有銀行明細の処理が完了しました。");
 
     // SBI明細の処理
     const sbiData = sbiSheet.getDataRange().getValues();
@@ -96,8 +96,8 @@ export function processTransaction() {
     // 5. レシートデータの処理
     // ③入力_レシートの全データを④作業_統合データにコピーする。各行は取引種別「支出」として扱う。
     // ※ レシートデータは、カード明細との重複排除後に残ったもの、または現金払いのものとして処理されます。
-    processReceiptData(receiptData, integratedSheet);
-    Logger.log("レシートデータの処理が完了しました。");
+    // processReceiptData(receiptData, integratedSheet);
+    // Logger.log("レシートデータの処理が完了しました。");
 
     // // 6. 最終データへの整形・出力
     // // ④作業_統合データの全データを、Cashewのインポート仕様に合わせて整形し、⑤出力_Cashew用シートに書き出す。
