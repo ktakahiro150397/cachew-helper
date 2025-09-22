@@ -5,9 +5,9 @@ import { IIdealDataConverter } from "./convertData";
 
 
 /**
- * SMBC CSVデータのIdealSheetRowへのコンバータクラス
+ * SBI CSVデータのIdealSheetRowへのコンバータクラス
  */
-export class SBIBankIdealDataConverter implements IIdealDataConverter {
+export class SBINetBankIdealDataConverter implements IIdealDataConverter {
     constructor(
         private readonly bankData: SpreadsheetData,
         private readonly expenceFrom: ExpenseFrom,
@@ -16,16 +16,16 @@ export class SBIBankIdealDataConverter implements IIdealDataConverter {
     convertToIdealDataRow(): Array<IdealSheetRow> {
         if (this.bankData.length <= 1) return [];
 
-        Logger.log(`SBIBankIdealDataConverter: Converting ${this.bankData.length - 1} rows of data.`);
+        Logger.log(`SBINetBankIdealDataConverter: Converting ${this.bankData.length - 1} rows of data.`);
 
         const idealDataRows: Array<IdealSheetRow> = [];
         for (let i = 1; i < this.bankData.length; i++) {
             const row = this.bankData[i];
 
             const date = formatDate(row[0]);
-            const amount_out = parseFloat(row[1]);
-            const amount_in = parseFloat(row[2]);
-            const description = String(row[3]).trim();
+            const description = String(row[1]).trim();
+            const amount_out = parseFloat(row[2]);
+            const amount_in = parseFloat(row[3]);
             const note = String(row[5]).trim();
 
             let amount = 0;

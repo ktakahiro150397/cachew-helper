@@ -1,45 +1,79 @@
-import { SBIBankIdealDataConverter } from "../core/converter/convertSBIBankData";
-import { ExpenseFrom } from "../interface/IdealSheet";
+import { IIdealDataConverter } from "../core/converter/convertData";
+import { SBINetBankIdealDataConverter } from "../core/converter/convertSBINetBankData";
+import { SMBCBankIdealDataConverter } from "../core/converter/convertSMBCBankData";
+import { ExpenseFrom, IdealSheetRow } from "../interface/IdealSheet";
 import { clearSheet } from "../sheetoperation/sheet-operation";
 
-
 export function convertDataToIdealSheet() {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-    const ideal = ss.getSheetByName("集計結果");
-    const smbc = ss.getSheetByName("SMBC");
+  const ideal = ss.getSheetByName("集計結果");
+  const smbc = ss.getSheetByName("SMBC");
+  const sbi = ss.getSheetByName("SBI");
 
-    if (!ideal || !smbc) {
-        Browser.msgBox(
-            "エラー",
-            "必要なシートが見つかりません。シート名が正しいか確認してください。（SMBC）",
-            Browser.Buttons.OK
-        );
-        Logger.log("必要なシートが見つかりません。処理を中止します。");
-        return;
+  if (!ideal || !smbc || !sbi) {
+    Browser.msgBox(
+      "エラー",
+      "必要なシートが見つかりません。シート名が正しいか確認してください。（SMBC）",
+      Browser.Buttons.OK
+    );
+    Logger.log("必要なシートが見つかりません。処理を中止します。");
+    return;
+  }
+
+  try {
+    // 初期化処理
+    clearSheet(ideal);
+
+    {
+      // データの取得・書き込み
+      const smbcSheetValues = smbc.getDataRange().getValues();
+      const smbcConverter = new SMBCBankIdealDataConverter(
+        smbcSheetValues,
+        ExpenseFrom.Takahiro_SMBC
+      );
+      addDataToIdealSheet(ideal, smbcConverter);
     }
 
-    try {
-        // 初期化処理
-        clearSheet(ideal);
-
-        // データの取得・書き込み
-        const smbcSheetValues = smbc.getDataRange().getValues();
-        const smbcConverter = new SBIBankIdealDataConverter(smbcSheetValues, ExpenseFrom.Takahiro_SMBC);
-        const idealDataToWrite = smbcConverter.convertToIdealDataRow().map(row => row.getWriteData());
-
-        // データの書き込み
-        ideal.getRange(ideal.getLastRow() + 1, 1, idealDataToWrite.length, idealDataToWrite[0].length).setValues(idealDataToWrite);
-
-        Logger.log(`SMBCデータの処理が完了しました。${idealDataToWrite.length} 行を追加しました。`);
-    } catch (error) {
-        Logger.log("エラーが発生しました: " + (error as Error).message);
-        Browser.msgBox(
-            "エラー",
-            "処理中にエラーが発生しました。ログを確認してください。",
-            Browser.Buttons.OK
-        );
+    {
+      const sbiSheetValues = sbi.getDataRange().getValues();
+      const sbiConverter = new SBINetBankIdealDataConverter(
+        sbiSheetValues,
+        ExpenseFrom.Takahiro_SBINetBank
+      );
+      addDataToIdealSheet(ideal, sbiConverter);
     }
-    
-    Logger.log("convertDataToIdealSheet finished at " + new Date().toISOString());
+  } catch (error) {
+    Logger.log("エラーが発生しました: " + (error as Error).message);
+    Browser.msgBox(
+      "エラー",
+      "処理中にエラーが発生しました。ログを確認してください。",
+      Browser.Buttons.OK
+    );
+  }
+
+  Logger.log("convertDataToIdealSheet finished at " + new Date().toISOString());
+}
+
+function addDataToIdealSheet(
+  ideal: GoogleAppsScript.Spreadsheet.Sheet,
+  converter: IIdealDataConverter
+) {
+  const convertedData = converter.convertToIdealDataRow();
+
+  if (convertedData.length === 0) {
+    Logger.log("変換されたデータがありません。");
+    return;
+  }
+
+  const dataToWrite = convertedData.map((row) => row.getWriteData());
+
+  ideal
+    .getRange(
+      ideal.getLastRow() + 1,
+      1,
+      dataToWrite.length,
+      dataToWrite[0].length
+    )
+    .setValues(dataToWrite);
 }

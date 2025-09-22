@@ -5,6 +5,7 @@ import { SpreadsheetRowData } from "../types/spreadsheet-types";
  */
 export enum ExpenseFrom {
     Takahiro_SMBC = "Takahiro SMBC",
+    Takahiro_SBINetBank = "Takahiro SBINet",
     Takahiro_Vpass = "Takahiro Vpass",
     Family_SMBC = "共有 SMBC",
     Family_Vpass = "共有 Vpass",
