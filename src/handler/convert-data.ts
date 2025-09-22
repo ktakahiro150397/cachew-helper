@@ -12,8 +12,10 @@ export function convertDataToIdealSheet() {
   const smbc = ss.getSheetByName("SMBC");
   const sbi = ss.getSheetByName("SBI");
   const vpass = ss.getSheetByName("Vpass");
+  const family_smbc = ss.getSheetByName("共有SMBC");
+  const family_vpass = ss.getSheetByName("共有Vpass");
 
-  if (!ideal || !smbc || !sbi || !vpass) {
+  if (!ideal || !smbc || !sbi || !vpass || !family_smbc || !family_vpass) {
     Browser.msgBox(
       "エラー",
       "必要なシートが見つかりません。シート名が正しいか確認してください。（SMBC）",
@@ -53,6 +55,24 @@ export function convertDataToIdealSheet() {
         ExpenseFrom.Takahiro_Vpass
       );
       addDataToIdealSheet(ideal, vpassConverter);
+    }
+    
+    {
+      const familySmbcSheetValues = family_smbc.getDataRange().getValues();
+      const familySmbcConverter = new SMBCBankIdealDataConverter(
+        familySmbcSheetValues,
+        ExpenseFrom.Family_SMBC
+      );
+      addDataToIdealSheet(ideal, familySmbcConverter);
+    }
+
+    {
+      const familyVpassSheetValues = family_vpass.getDataRange().getValues();
+      const familyVpassConverter = new VpassIdealDataConverter(
+        familyVpassSheetValues,
+        ExpenseFrom.Family_Vpass
+      );
+      addDataToIdealSheet(ideal, familyVpassConverter);
     }
     
   } catch (error) {

@@ -1,17 +1,13 @@
 import { ExpenseFrom, IdealSheetRow } from "../../interface/IdealSheet";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { formatDate } from "../util/dateformat";
-import { IIdealDataConverter } from "./convertData";
+import { IdealDataConverterBase, IIdealDataConverter } from "./convertData";
 
 
 /**
  * SMBC CSVデータのIdealSheetRowへのコンバータクラス
  */
-export class SMBCBankIdealDataConverter implements IIdealDataConverter {
-    constructor(
-        private readonly bankData: SpreadsheetData,
-        private readonly expenceFrom: ExpenseFrom,
-    ) {};
+export class SMBCBankIdealDataConverter extends IdealDataConverterBase {
 
     convertToIdealDataRow(): Array<IdealSheetRow> {
         if (this.bankData.length <= 1) return [];
@@ -26,7 +22,7 @@ export class SMBCBankIdealDataConverter implements IIdealDataConverter {
             const amount_out = parseFloat(row[1]);
             const amount_in = parseFloat(row[2]);
             const description = String(row[3]).trim();
-            const note = String(row[5]).trim();
+            const note = String(row[5] || "").trim();
 
             let amount = 0;
             if (!isNaN(amount_out)) {
@@ -49,6 +45,6 @@ export class SMBCBankIdealDataConverter implements IIdealDataConverter {
             idealDataRows.push(idealRow);
         }
 
-        return idealDataRows;
+        return super.distinctIdealDataRows(idealDataRows);
     }
 }

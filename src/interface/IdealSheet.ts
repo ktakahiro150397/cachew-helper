@@ -55,7 +55,11 @@ export class IdealSheetRow implements IIdealSheetRow {
         public content: string,
         public amount: number,
         public note: string
-    ) {};
+    ) {
+        if (note === undefined) {
+            this.note = "";
+        }
+    };
 
     getWriteData(): SpreadsheetRowData {
         return [
@@ -66,5 +70,9 @@ export class IdealSheetRow implements IIdealSheetRow {
             this.amount,
             this.note
         ]
+    }
+
+    getHashKey(): string {
+        return `${this.date.toISOString()}|${this.account}|${this.category}|${this.content}|${this.amount}|${this.note}`;
     }
 }

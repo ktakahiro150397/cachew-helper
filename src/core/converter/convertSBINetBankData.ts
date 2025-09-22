@@ -1,17 +1,17 @@
 import { ExpenseFrom, IdealSheetRow } from "../../interface/IdealSheet";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { formatDate } from "../util/dateformat";
-import { IIdealDataConverter } from "./convertData";
+import { IdealDataConverterBase, IIdealDataConverter } from "./convertData";
 
 
 /**
  * SBI CSVデータのIdealSheetRowへのコンバータクラス
  */
-export class SBINetBankIdealDataConverter implements IIdealDataConverter {
-    constructor(
-        private readonly bankData: SpreadsheetData,
-        private readonly expenceFrom: ExpenseFrom,
-    ) {};
+export class SBINetBankIdealDataConverter extends IdealDataConverterBase{
+    // constructor(
+    //     private readonly bankData: SpreadsheetData,
+    //     private readonly expenceFrom: ExpenseFrom,
+    // ) {};
 
     convertToIdealDataRow(): Array<IdealSheetRow> {
         if (this.bankData.length <= 1) return [];
@@ -49,6 +49,6 @@ export class SBINetBankIdealDataConverter implements IIdealDataConverter {
             idealDataRows.push(idealRow);
         }
 
-        return idealDataRows;
+        return super.distinctIdealDataRows(idealDataRows);
     }
 }

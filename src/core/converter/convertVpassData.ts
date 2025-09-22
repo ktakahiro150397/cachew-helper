@@ -1,18 +1,13 @@
 import { ExpenseFrom, IdealSheetRow } from "../../interface/IdealSheet";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 import { formatDate } from "../util/dateformat";
-import { IIdealDataConverter } from "./convertData";
+import { IdealDataConverterBase, IIdealDataConverter } from "./convertData";
 
 
 /**
  * Vpass CSVデータのIdealSheetRowへのコンバータクラス
  */
-export class VpassIdealDataConverter implements IIdealDataConverter {
-    constructor(
-        private readonly bankData: SpreadsheetData,
-        private readonly expenceFrom: ExpenseFrom,
-    ) {};
-
+export class VpassIdealDataConverter extends IdealDataConverterBase {
     convertToIdealDataRow(): Array<IdealSheetRow> {
         if (this.bankData.length <= 1) return [];
 
@@ -46,6 +41,6 @@ export class VpassIdealDataConverter implements IIdealDataConverter {
             idealDataRows.push(idealRow);
         }
 
-        return idealDataRows;
+        return super.distinctIdealDataRows(idealDataRows);
     }
 }
