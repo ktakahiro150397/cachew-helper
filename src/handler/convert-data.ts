@@ -1,3 +1,5 @@
+import { getCategoryMaster } from "../core/category/getCategoryMaster";
+import { setCategory } from "../core/category/setCategory";
 import { IIdealDataConverter } from "../core/converter/convertData";
 import { SBINetBankIdealDataConverter } from "../core/converter/convertSBINetBankData";
 import { SMBCBankIdealDataConverter } from "../core/converter/convertSMBCBankData";
@@ -15,7 +17,9 @@ export function convertDataToIdealSheet() {
   const family_smbc = ss.getSheetByName("共有SMBC");
   const family_vpass = ss.getSheetByName("共有Vpass");
 
-  if (!ideal || !smbc || !sbi || !vpass || !family_smbc || !family_vpass) {
+  const _master = ss.getSheetByName("_マスタ");
+
+  if (!ideal || !smbc || !sbi || !vpass || !family_smbc || !family_vpass || !_master) {
     Browser.msgBox(
       "エラー",
       "必要なシートが見つかりません。シート名が正しいか確認してください。（SMBC）",
@@ -75,6 +79,12 @@ export function convertDataToIdealSheet() {
       addDataToIdealSheet(ideal, familyVpassConverter);
     }
     
+
+    {
+      const masterSheetValues = _master.getDataRange().getValues();
+      const categoryMaster = getCategoryMaster(masterSheetValues);
+      setCategoryToIdealSheet(ideal, categoryMaster);
+    }
   } catch (error) {
     Logger.log("エラーが発生しました: " + (error as Error).message);
     Browser.msgBox(
@@ -108,4 +118,10 @@ function addDataToIdealSheet(
       dataToWrite[0].length
     )
     .setValues(dataToWrite);
+}
+
+function setCategoryToIdealSheet(ideal: GoogleAppsScript.Spreadsheet.Sheet,
+  categoryMaster: Array<string>
+) {
+  setCategory(ideal, categoryMaster);
 }
