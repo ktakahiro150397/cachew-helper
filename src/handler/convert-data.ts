@@ -1,3 +1,4 @@
+import { CategoryGetterFromGemini } from "../core/category/getCategoryFromGemini";
 import { getCategoryMaster } from "../core/category/getCategoryMaster";
 import { setCategory } from "../core/category/setCategory";
 import { IIdealDataConverter } from "../core/converter/convertData";
@@ -5,6 +6,7 @@ import { SBINetBankIdealDataConverter } from "../core/converter/convertSBINetBan
 import { SMBCBankIdealDataConverter } from "../core/converter/convertSMBCBankData";
 import { VpassIdealDataConverter } from "../core/converter/convertVpassData";
 import { ExpenseFrom, IdealSheetRow } from "../interface/IdealSheet";
+import { CategoryItem } from "../interface/MasterSheet";
 import { clearSheet } from "../sheetoperation/sheet-operation";
 
 export function convertDataToIdealSheet() {
@@ -18,8 +20,9 @@ export function convertDataToIdealSheet() {
   const family_vpass = ss.getSheetByName("共有Vpass");
 
   const _master = ss.getSheetByName("_マスタ");
+  const _savePrompt = ss.getSheetByName("_プロンプトマスタ");
 
-  if (!ideal || !smbc || !sbi || !vpass || !family_smbc || !family_vpass || !_master) {
+  if (!ideal || !smbc || !sbi || !vpass || !family_smbc || !family_vpass || !_master || !_savePrompt) {
     Browser.msgBox(
       "エラー",
       "必要なシートが見つかりません。シート名が正しいか確認してください。（SMBC）",
@@ -83,7 +86,11 @@ export function convertDataToIdealSheet() {
     {
       const masterSheetValues = _master.getDataRange().getValues();
       const categoryMaster = getCategoryMaster(masterSheetValues);
-      setCategoryToIdealSheet(ideal, categoryMaster);
+      Logger.log(`カテゴリマスタを取得: ${categoryMaster.length} 件`);
+
+      const geminiCategoryGetter = new CategoryGetterFromGemini("api-key-here",_savePrompt,categoryMaster);
+      setCategory(ideal, geminiCategoryGetter);
+      // setCategoryToIdealSheet(ideal, categoryMaster);
     }
   } catch (error) {
     Logger.log("エラーが発生しました: " + (error as Error).message);
@@ -120,8 +127,8 @@ function addDataToIdealSheet(
     .setValues(dataToWrite);
 }
 
-function setCategoryToIdealSheet(ideal: GoogleAppsScript.Spreadsheet.Sheet,
-  categoryMaster: Array<string>
-) {
-  setCategory(ideal, categoryMaster);
-}
+// function setCategoryToIdealSheet(ideal: GoogleAppsScript.Spreadsheet.Sheet,
+//   categoryMaster: Array<CategoryItem>
+// ) {
+//   setCategory(ideal, categoryMaster);
+// }

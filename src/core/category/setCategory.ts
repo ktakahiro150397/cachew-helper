@@ -1,6 +1,9 @@
 import { IdealSheetRow } from "../../interface/IdealSheet";
+import { CategoryItem } from "../../interface/MasterSheet";
+import { CategoryGetter } from "./getCategoryFromGemini";
 
-export function setCategory(ideal: GoogleAppsScript.Spreadsheet.Sheet, categoryMaster: Array<string>) {
+export function setCategory(ideal: GoogleAppsScript.Spreadsheet.Sheet, 
+    categoryGetter: CategoryGetter) {
 
     if (!ideal) {
         throw new Error("データデータが見つかりません。");
@@ -20,20 +23,28 @@ export function setCategory(ideal: GoogleAppsScript.Spreadsheet.Sheet, categoryM
 
         if (row.category != "") {
             // カテゴリが設定されている場合はスキップ
+            Logger.log(`カテゴリが設定されているためスキップ: ${row.category}`);
             continue;
         }
 
         // カテゴリが未設定の場合のみカテゴリを設定する
-        const categoryFromContent = getCategory(row.content + row.note, categoryMaster);
+        const promptCategory = `# 摘要 
+${row.content}`
 
-        row.category = categoryFromContent;
+        const categoryFromContent = categoryGetter.getCategory(promptCategory);
+        // const categoryFromContent = getCategory(row.content + row.note, categoryMaster);
+        ideal.getRange(i+1,3).setValue(categoryFromContent.category); // カテゴリ列（C列）のみ更新
+
+        // row.category = categoryFromContent;
 
         // シート更新
-        const dataToWrite = row.getWriteData();
-        ideal.getRange(i+1,1,1,dataToWrite.length).setValue(dataToWrite);
+        // const dataToWrite = [row.getWriteData()];
+        // Logger.log(`カテゴリを設定: ${dataToWrite}`);
+        // ideal.getRange(i+1,1,1,dataToWrite[0].length).setValues(dataToWrite);
 }}
 
 
-function getCategory(content: string, categoryMaster: Array<string>): string {
-    return `${content} : test category set`;
-}
+// function getCategory(content: string, categoryMaster: Array<CategoryItem>): string {
+//     // Logger.log(`Category Master: ${JSON.stringify(categoryMaster)}`);
+//     return `${content} : test category set`;
+// }

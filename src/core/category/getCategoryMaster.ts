@@ -1,3 +1,4 @@
+import { CategoryItem } from "../../interface/MasterSheet";
 import { SpreadsheetData } from "../../types/spreadsheet-types";
 
 /**
@@ -5,17 +6,19 @@ import { SpreadsheetData } from "../../types/spreadsheet-types";
  * @param ss 
  * @returns 
  */
-export function getCategoryMaster(categorySheetData: SpreadsheetData): Array<string> {
+export function getCategoryMaster(categorySheetData: SpreadsheetData): Array<CategoryItem> {
   if (!categorySheetData) {
     throw new Error("カテゴリマスタシートが見つかりません。");
   }
 
-    const categoryMap = new Array<string>();
+    const categoryMap = new Array<CategoryItem>();
     for (let i = 1; i < categorySheetData.length; i++) {
         const row = categorySheetData[i];
         const category = String(row[0]).trim();
-        if (categoryMap.includes(category) === false && category !== "") {
-            categoryMap.push(category);
+        if (category !== "") {
+            categoryMap.push({
+                category: category,
+            });
         }
     }
 
