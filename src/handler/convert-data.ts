@@ -88,7 +88,8 @@ export function convertDataToIdealSheet() {
       const categoryMaster = getCategoryMaster(masterSheetValues);
       Logger.log(`カテゴリマスタを取得: ${categoryMaster.length} 件`);
 
-      const geminiCategoryGetter = new CategoryGetterFromGemini("api-key-here",_savePrompt,categoryMaster);
+      const apiKey = CategoryGetterFromGemini.GetGeminiAPIKeyFromMasterSheet(_master);
+      const geminiCategoryGetter = new CategoryGetterFromGemini(apiKey,_savePrompt,categoryMaster);
       setCategory(ideal, geminiCategoryGetter);
       // setCategoryToIdealSheet(ideal, categoryMaster);
     }
