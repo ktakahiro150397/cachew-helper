@@ -77,7 +77,7 @@ ${content}
     // 既に同じ内容で取得した結果があれば、それを返す
     const existing = this.existingResults.find(res => res.prompt === content)
     if (existing) {
-      Logger.log(`既存の結果を使用: ${JSON.stringify(existing)}`)
+      //   Logger.log(`既存の結果を使用: ${JSON.stringify(existing)}`)
       return existing
     }
 
