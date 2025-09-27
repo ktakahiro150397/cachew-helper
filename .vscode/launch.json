@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug TypeScript",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/local/getCategoryOnLocal.ts",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"],
+      "runtimeArgs": ["-r", "ts-node/register"]
+    }
+  ]
+}

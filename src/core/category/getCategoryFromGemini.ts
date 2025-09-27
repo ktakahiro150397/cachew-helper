@@ -22,14 +22,14 @@ export abstract class CategoryGetterBase implements CategoryGetter {
 }
 
 export class CategoryGetterFromGemini extends CategoryGetterBase {
-  private prompt: string = ``
-  private existingResults: Array<CategoryGetResult> = []
+  protected prompt: string = ``
+  protected existingResults: Array<CategoryGetResult> = []
 
-  private readonly model = 'gemini-2.0-flash'
-  private readonly maxRetries = 3
-  private readonly RateLimitDelay = 60 // 秒
+  protected readonly model = 'gemini-2.0-flash'
+  protected readonly maxRetries = 3
+  protected readonly RateLimitDelay = 60 // 秒
 
-  private apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:streamGenerateContent?key=${this.apiKey}`
+  protected apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:streamGenerateContent?key=${this.apiKey}`
 
   static GetGeminiAPIKeyFromMasterSheet (
     masterSheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -39,7 +39,7 @@ export class CategoryGetterFromGemini extends CategoryGetterBase {
   }
 
   constructor (
-    private apiKey: string,
+    protected apiKey: string,
     private saveSheet: GoogleAppsScript.Spreadsheet.Sheet | null = null,
     categoryMaster: Array<CategoryItem>
   ) {
@@ -52,7 +52,7 @@ export class CategoryGetterFromGemini extends CategoryGetterBase {
     )
   }
 
-  private callGeminiToGetCategory (content: string): CategoryGetResult {
+  protected callGeminiToGetCategory (content: string): CategoryGetResult {
     // Gemini APIを呼び出してカテゴリを取得するロジックを実装
     this.prompt = `以下のカテゴリマスタを参考に、与えられた内容に最も適したカテゴリを選択してください。
 カテゴリマスタ:
@@ -166,7 +166,7 @@ ${content}
     }
   }
 
-  private createGeminiApiPayload (prompt: string): object {
+  protected createGeminiApiPayload (prompt: string): object {
     return {
       contents: [
         {
@@ -197,7 +197,7 @@ ${content}
     }
   }
 
-  private appendCategoryResult (result: CategoryGetResult) {
+  protected appendCategoryResult (result: CategoryGetResult) {
     if (this.saveSheet) {
       const lastRow = this.saveSheet.getLastRow()
       this.saveSheet.appendRow([result.prompt, result.category, result.reason])

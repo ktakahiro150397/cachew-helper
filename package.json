@@ -16,9 +16,17 @@
   "devDependencies": {
     "@google/clasp": "^3.0.6-alpha",
     "@types/google-apps-script": "^1.0.98",
+    "@types/node": "^24.5.2",
     "clasp": "^1.0.0",
     "esbuild": "^0.25.5",
     "esbuild-gas-plugin": "^0.9.0",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@google/genai": "^1.21.0",
+    "@types/node-fetch": "^2.6.13",
+    "deasync": "^0.1.30",
+    "mime": "^4.1.0",
+    "node-fetch": "^3.3.2"
   }
 }
